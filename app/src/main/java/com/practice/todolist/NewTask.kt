@@ -10,34 +10,43 @@ import android.widget.Button
 import android.widget.EditText
 import java.util.*
 
+/**
+ * обработчик формы по созданию задания и сохранение в БД
+ */
 
 internal class NewTask : AppCompatActivity(), View.OnClickListener {
-    internal lateinit var mDbAdapter: DBAdapter
+    private lateinit var mDbAdapter: DBAdapter
+
     lateinit var btnDatePicker: Button
     lateinit var btnTimePicker: Button
     lateinit var txtDate: EditText
     lateinit var txtTime: EditText
+    private lateinit var mTask: EditText
+    private lateinit var mDesc: EditText
+    private lateinit var mAdd: Button
+
     private var mYear: Int = 0
     private var mMonth: Int = 0
     private var mDay: Int = 0
     private var mHour: Int = 0
     private var mMinute: Int = 0
-    internal lateinit var mTask: EditText
-    internal lateinit var mDesc: EditText
-    internal lateinit var mAdd: Button
-    internal var mRowId: Long? = null
+    private var mRowId: Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_task)
-        mTask = findViewById<EditText>(R.id.txtTask)
-        mDesc = findViewById<EditText>(R.id.txtDesc)
-        btnDatePicker = findViewById<Button>(R.id.btn_date)
-        btnTimePicker = findViewById<Button>(R.id.btn_time)
-        txtDate = findViewById<EditText>(R.id.in_date)
-        txtTime = findViewById<EditText>(R.id.in_time)
-        mAdd = findViewById<Button>(R.id.btnAdd)
+        mTask = findViewById(R.id.txtTask)
+        mDesc = findViewById(R.id.txtDesc)
+        btnDatePicker = findViewById(R.id.btn_date)
+        btnTimePicker = findViewById(R.id.btn_time)
+        txtDate = findViewById(R.id.in_date)
+        txtTime = findViewById(R.id.in_time)
+        mAdd = findViewById(R.id.btnAdd)
         btnDatePicker.setOnClickListener(this)
         btnTimePicker.setOnClickListener(this)
+
+        mDbAdapter = DBAdapter(this)  //DB connection
+        mDbAdapter.open()
 
         mRowId = if (savedInstanceState == null)
             null
@@ -67,7 +76,7 @@ internal class NewTask : AppCompatActivity(), View.OnClickListener {
 
 
             val datePickerDialog = DatePickerDialog(this,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth -> txtDate.setText(
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> txtDate.setText(
                     dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 )
                 }, mYear, mMonth, mDay
@@ -83,7 +92,7 @@ internal class NewTask : AppCompatActivity(), View.OnClickListener {
 
             // Launch Time Picker Dialog
             val timePickerDialog = TimePickerDialog(this,
-                TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute") }, mHour, mMinute, false
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute") }, mHour, mMinute, false
             )
             timePickerDialog.show()
         }
@@ -92,7 +101,7 @@ internal class NewTask : AppCompatActivity(), View.OnClickListener {
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
-            startManagingCursor(c)
+                startManagingCursor(c)
             mTask.setText(
                 c!!.getString(
                     c.getColumnIndexOrThrow(DBAdapter.KEY_TASK)
