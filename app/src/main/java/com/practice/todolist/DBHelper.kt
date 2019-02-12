@@ -5,6 +5,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+/**
+ * Запросы к БД
+ */
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -22,7 +25,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private val DATABASE_NAME = "tasks"
         private val DATABASE_VERSION = 1
         private val DATABASE_CREATE =
-            "CREATE TABLE task_data (_id integer primary key autoincrement,task text not null,description text not null, date text not null, time text not null);"
+            "CREATE TABLE task_data (" +
+                    "_id integer primary key autoincrement," +
+                    "task text not null," +
+                    "description text not null, " +
+                    "date text not null, " +
+                    "time text not null);"
     }
 
 }

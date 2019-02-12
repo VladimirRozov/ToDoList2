@@ -3,46 +3,62 @@ package com.practice.todolist
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-
-import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.*
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private val ADD_TASK_REQUEST = 0
+    }
+
+    lateinit var mDbAdapter: DBAdapter
+
+    private var adapter: ItemAdapter? = null
+    private var recyclerView: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
 
-        val fab = findViewById<View>(R.id.fab) as FloatingActionButton
+        setContentView(R.layout.activity_main)
+
+        mDbAdapter = DBAdapter(this)  //DB connection
+        mDbAdapter.open()
+
+        val fab = findViewById<View>(R.id.fab) as FloatingActionButton  //добавляет новую задачу
         fab.setOnClickListener {
-                _ ->
-            val intent = Intent(this, NewTask::class.java)
+            val intent = Intent(this, NewTaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST)
         }
+
+        //следующий код до конца класса отвечает за вывод списка задач
+        recyclerView = findViewById(R.id.to_do_list_container)
+        recyclerView?.layoutManager = LinearLayoutManager(this)
+
+        updateUI()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+    private fun updateUI(){
+        adapter = ItemAdapter(toDoList.data)
+        recyclerView!!.adapter = adapter
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+    private inner class ItemHolder(inflater: LayoutInflater, parent: ViewGroup)
+        : RecyclerView.ViewHolder(inflater.inflate(R.layout.to_do_row, parent, false)) {
+    }
+
+    private inner class ItemAdapter(val items: List<ToDoItem>): RecyclerView.Adapter<ItemHolder>() {
+        override fun getItemCount(): Int {
+            return items.size
         }
-    }
-    companion object {
-        private val ADD_TASK_REQUEST = 0
-        val DESCRIPTION_TEXT = "description"
+
+        override fun onBindViewHolder(p0: ItemHolder, p1: Int) {
+
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ItemHolder {
+            return ItemHolder(LayoutInflater.from(this@MainActivity), parent)
+        }
     }
 }

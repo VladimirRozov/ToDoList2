@@ -3,8 +3,6 @@ package com.practice.todolist
 import android.app.ListActivity
 import android.content.Intent
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.ContextMenu.ContextMenuInfo
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,11 +10,22 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.ListView
 import android.widget.SimpleCursorAdapter
 
+/**
+ *  класс, отвечающий за обновления заданий (новых пунктов)
+ */
 
 
-
-class ToDo : ListActivity() {
+class ToDoActivity : ListActivity() {
     private lateinit var mDbAdapter: DBAdapter
+
+    companion object {
+        private val ACTIVITY_CREATE = 0
+        private val ACTIVITY_EDIT = 1
+
+        val INSERT_ID = Menu.FIRST
+        val DELETE_ID = Menu.FIRST + 1
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,7 +36,7 @@ class ToDo : ListActivity() {
     }
 
     fun create() {
-        val i = Intent(this, NewTask::class.java)
+        val i = Intent(this, NewTaskActivity::class.java)
         startActivityForResult(i, ACTIVITY_CREATE)
     }
 
@@ -36,7 +45,7 @@ class ToDo : ListActivity() {
         startManagingCursor(c)
         val from = arrayOf(DBAdapter.KEY_TASK, DBAdapter.KEY_DESCRIPTION)
         val to = intArrayOf(R.id.tv_item_text)
-        val adapter = SimpleCursorAdapter(this, R.layout.row_items, c, from, to)
+        val adapter = SimpleCursorAdapter(this, R.layout.to_do_row, c, from, to)
         listAdapter = adapter
 
     }
@@ -61,22 +70,6 @@ class ToDo : ListActivity() {
     }
 
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu, v: View,
-        menuInfo: ContextMenuInfo
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-       // menu.add(0, DELETE_ID, 0, R.string.delete)
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        //menu.add(0, INSERT_ID, 0, R.string.add)
-        return true
-    }
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             INSERT_ID -> {
@@ -91,17 +84,10 @@ class ToDo : ListActivity() {
 
     override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
-        val i = Intent(this, NewTask::class.java)
+        val i = Intent(this, NewTaskActivity::class.java)
         i.putExtra(DBAdapter.KEY_ROW_ID, id)
         startActivityForResult(i, ACTIVITY_EDIT)
     }
 
-    companion object {
-        private val ACTIVITY_CREATE = 0
-        private val ACTIVITY_EDIT = 1
-
-        val INSERT_ID = Menu.FIRST
-        val DELETE_ID = Menu.FIRST + 1
-    }
 
 }

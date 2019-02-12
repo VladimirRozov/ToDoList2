@@ -6,6 +6,9 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 
+/**
+ * отвечает за функции по обращению к бд для сохранения данных
+ */
 class DBAdapter(private var mCtx: Context) {
 
     private lateinit var mDb: SQLiteDatabase
@@ -22,10 +25,10 @@ class DBAdapter(private var mCtx: Context) {
         mDbHelper.close()
     }
 
-    fun createTask(task: String, desciption: String, date: String, time: String): Long {
+    fun createTask(task: String, description: String, date: String, time: String): Long {
         val initialValues = ContentValues()
         initialValues.put(KEY_TASK, task)
-        initialValues.put(KEY_DESCRIPTION, desciption)
+        initialValues.put(KEY_DESCRIPTION, description)
         initialValues.put(KEY_DATE, date)
         initialValues.put(KEY_TIME, time)
         return mDb.insert(DATABASE_TABLE, null, initialValues)
@@ -35,10 +38,10 @@ class DBAdapter(private var mCtx: Context) {
         return mDb.delete(DATABASE_TABLE, "$KEY_ROW_ID = $id", null) > 0
     }
 
-    fun updateTask(id: Long, task: String, desciption: String, date: String, time: String): Boolean {
+    fun updateTask(id: Long, task: String, description: String, date: String, time: String): Boolean {
         val initialValues = ContentValues()
         initialValues.put(KEY_TASK, task)
-        initialValues.put(KEY_DESCRIPTION, desciption)
+        initialValues.put(KEY_DESCRIPTION, description)
         initialValues.put(KEY_DATE, date)
         initialValues.put(KEY_TIME, time)
         return mDb.update(DATABASE_TABLE, initialValues, "$KEY_ROW_ID = $id", null) > 0
