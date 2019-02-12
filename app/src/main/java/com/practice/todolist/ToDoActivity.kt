@@ -15,7 +15,7 @@ import android.widget.SimpleCursorAdapter
  */
 
 
-class ToDo : ListActivity() {
+class ToDoActivity : ListActivity() {
     private lateinit var mDbAdapter: DBAdapter
 
     companion object {
@@ -36,7 +36,7 @@ class ToDo : ListActivity() {
     }
 
     fun create() {
-        val i = Intent(this, NewTask::class.java)
+        val i = Intent(this, NewTaskActivity::class.java)
         startActivityForResult(i, ACTIVITY_CREATE)
     }
 
@@ -84,7 +84,7 @@ class ToDo : ListActivity() {
 
     override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
-        val i = Intent(this, NewTask::class.java)
+        val i = Intent(this, NewTaskActivity::class.java)
         i.putExtra(DBAdapter.KEY_ROW_ID, id)
         startActivityForResult(i, ACTIVITY_EDIT)
     }

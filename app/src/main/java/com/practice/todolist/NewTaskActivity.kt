@@ -14,7 +14,7 @@ import java.util.*
  * обработчик формы по созданию задания и сохранение в БД
  */
 
-internal class NewTask : AppCompatActivity(), View.OnClickListener {
+internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mDbAdapter: DBAdapter
 
     lateinit var btnDatePicker: Button

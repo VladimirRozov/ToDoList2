@@ -3,13 +3,10 @@ package com.practice.todolist
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -31,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton  //добавляет новую задачу
         fab.setOnClickListener {
-            val intent = Intent(this, NewTask::class.java)
+            val intent = Intent(this, NewTaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST)
         }
 
