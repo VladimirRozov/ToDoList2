@@ -12,7 +12,7 @@ import java.util.*
 
 
 internal class NewTask : AppCompatActivity(), View.OnClickListener {
-    internal lateinit var mDbAdapter: DBAdapter
+    lateinit var mDbAdapter: DBAdapter
     lateinit var btnDatePicker: Button
     lateinit var btnTimePicker: Button
     lateinit var txtDate: EditText
@@ -22,10 +22,10 @@ internal class NewTask : AppCompatActivity(), View.OnClickListener {
     private var mDay: Int = 0
     private var mHour: Int = 0
     private var mMinute: Int = 0
-    internal lateinit var mTask: EditText
-    internal lateinit var mDesc: EditText
-    internal lateinit var mAdd: Button
-    internal var mRowId: Long? = null
+    lateinit var mTask: EditText
+    lateinit var mDesc: EditText
+    lateinit var mAdd: Button
+    var mRowId: Long? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_task)
