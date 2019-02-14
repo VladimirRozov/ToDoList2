@@ -47,10 +47,11 @@ class MainActivity : AppCompatActivity() {
 
         // создааем адаптер и настраиваем список
         scAdapter = SimpleCursorAdapter(this, R.layout.to_do_row, cursor, from, to)
-        lvData = findViewById<ListView>(R.id.to_do_list_container)
+        lvData = findViewById(R.id.to_do_list_container)
         lvData!!.setAdapter(scAdapter)
         registerForContextMenu(lvData)
         createNotificiationChannel()
+
 
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton  //добавляет новую задачу
         fab.setOnClickListener {

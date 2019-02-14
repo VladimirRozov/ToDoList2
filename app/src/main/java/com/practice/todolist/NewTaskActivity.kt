@@ -13,6 +13,7 @@ import java.util.*
 
 internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var mDbAdapter: DBAdapter
+
     lateinit var btnDatePicker: Button
     lateinit var btnTimePicker: Button
     lateinit var txtDate: EditText
