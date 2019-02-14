@@ -96,8 +96,15 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             )
             timePickerDialog.show()
         }
+        NotificationManager.setNotification(this, getTaskTimeAsLong())
     }
 
+
+    //нужно вот этот метод поменять
+    private fun getTaskTimeAsLong(): Long{
+        val time =( mYear*31556926+mMonth*2629743+mDay*86400+mHour*3600+mMinute*60)*1000
+        return time.toLong()
+    }
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
