@@ -107,7 +107,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             )
             timePickerDialog.show()
         }
-        milisec = ((mYear*31556926+mMonth*2629743+mDay*86400+mHour*3600+mMinute*60)*1000).toLong()
+        milisec = ((((mYear-1970)*365.24+(mMonth)*30.44+(mDay))*86400+(mHour-8)*3600+(mMinute+12)*60)*1000).toLong()
     }
 
     private fun populateFields() {
