@@ -11,7 +11,7 @@ import android.widget.EditText
 import java.util.*
 
 
-internal class NewTask : AppCompatActivity(), View.OnClickListener {
+internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var mDbAdapter: DBAdapter
     lateinit var btnDatePicker: Button
     lateinit var btnTimePicker: Button
