@@ -31,6 +31,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private var mHour: Int = 0
     private var mMinute: Int = 0
     private var mRowId: Long? = null
+    var milisec: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,10 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         mAdd = findViewById(R.id.btnAdd)
         btnDatePicker.setOnClickListener(this)
         btnTimePicker.setOnClickListener(this)
-
+        mAdd.setEnabled(false)
+        val edList = arrayOf<EditText>(mTask, mDesc, txtDate, txtTime)
+        val textWatcher = CustomTextWatcher(edList, mAdd)
+        for (editText in edList) editText.addTextChangedListener(textWatcher)
         mDbAdapter = DBAdapter(this)  //DB connection
         mDbAdapter.open()
 
@@ -79,6 +83,9 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> txtDate.setText(
                     dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 )
+                    mYear = year
+                    mMonth = monthOfYear
+                    mDay = dayOfMonth
                 }, mYear, mMonth, mDay
             )
             datePickerDialog.show()
@@ -92,16 +99,21 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
             // Launch Time Picker Dialog
             val timePickerDialog = TimePickerDialog(this,
-                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute") }, mHour, mMinute, false
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute")
+                    mHour=hourOfDay
+                    mMinute = minute
+                }, mHour, mMinute, false
+
             )
             timePickerDialog.show()
         }
+        milisec = ((mYear*31556926+mMonth*2629743+mDay*86400+mHour*3600+mMinute*60)*1000).toLong()
     }
 
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
-                startManagingCursor(c)
+            startManagingCursor(c)
             mTask.setText(
                 c!!.getString(
                     c.getColumnIndexOrThrow(DBAdapter.KEY_TASK)
@@ -112,14 +124,14 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
                     c.getColumnIndexOrThrow(DBAdapter.KEY_DESCRIPTION)
                 )
             )
-            txtDate.setText(
-                c.getString(
-                c.getColumnIndexOrThrow(DBAdapter.KEY_DATE)
-            ))
+//            txtDate.setText(
+//                c.getString(
+//                c.getColumnIndexOrThrow(DBAdapter.KEY_DATE)
+//            ))
             txtTime.setText(
                 c.getString(
-                c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
-            ))
+                    c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
+                ))
 
         }
     }
@@ -143,15 +155,19 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveState() {
         val task = mTask.text.toString()
         val desc = mDesc.text.toString()
-        val date = txtDate.text.toString()
-        val time = txtTime.text.toString()
+        val time = milisec
+//        val date = txtDate.text.toString()
+//        val time = txtTime.text.toString()
         if (mRowId == null) {
-            val id = mDbAdapter.createTask(task,desc,date,time)
+//            val id = mDbAdapter.createTask(task,desc,date,time)
+            val id = mDbAdapter.createTask(task,desc,time)
             if (id > 0) {
                 mRowId = id
             }
         } else {
-            mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
+            //  mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
+            mDbAdapter.updateTask(mRowId!!,task,desc,time)
+
         }
     }
 

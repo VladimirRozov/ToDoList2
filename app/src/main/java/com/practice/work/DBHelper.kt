@@ -29,8 +29,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     "_id integer primary key autoincrement," +
                     "task text not null," +
                     "description text not null, " +
-                    "date text not null, " +
-                    "time text not null);"
+                    "time long not null);"
     }
 
 }

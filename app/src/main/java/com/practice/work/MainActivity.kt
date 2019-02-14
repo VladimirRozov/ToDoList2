@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         //создание курсора и извление данных и бд
         cursor = mDbAdapter.fetchAllTasks()
         startManagingCursor(cursor)
-        val from = arrayOf<String>(DBAdapter.KEY_TASK, DBAdapter.KEY_DESCRIPTION, DBAdapter.KEY_DATE, DBAdapter.KEY_TIME)
+        val from = arrayOf<String>(DBAdapter.KEY_TASK, DBAdapter.KEY_DESCRIPTION, DBAdapter.KEY_TIME)
         val to = intArrayOf(R.id.item_text_view,R.id.item_text_decr,R.id.item_date, R.id.item_time)
 
         // создааем адаптер и настраиваем список
