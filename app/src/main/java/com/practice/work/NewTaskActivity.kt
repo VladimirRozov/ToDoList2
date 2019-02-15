@@ -15,10 +15,6 @@ import android.content.DialogInterface
 import android.content.Intent
 
 
-
-
-
-
 /**
  * обработчик формы по созданию задания и сохранение в БД
  */
@@ -40,7 +36,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private var mMinute: Int = 0
     private var mRowId: Long? = null
     var milisec: Long = 0
-    var id:Long = 0
+    var id: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_task)
@@ -58,15 +54,15 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         val textWatcher = CustomTextWatcher(edList, mAdd)
         for (editText in edList) editText.addTextChangedListener(textWatcher)
         mDbAdapter = DBAdapter(this)  //DB connection
-        mDbAdapter.open()
-        mRowId = if (savedInstanceState == null)
-            null
-        else
-            savedInstanceState.getSerializable(DBAdapter.KEY_ROW_ID) as Long
-        if (mRowId == null) {
-            val extras = intent.extras
-            mRowId = extras?.getLong(DBAdapter.KEY_ROW_ID)
-        }
+//        mDbAdapter.open()
+//        mRowId = if (savedInstanceState == null)
+//            null
+//        else
+//            savedInstanceState.getSerializable(DBAdapter.KEY_ROW_ID) as Long
+//        if (mRowId == null) {
+//            val extras = intent.extras
+//            mRowId = extras?.getLong(DBAdapter.KEY_ROW_ID)
+//        }
 
         populateFields()
         mAdd.setOnClickListener {
@@ -87,10 +83,12 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             mDay = c.get(Calendar.DAY_OF_MONTH)
 
 
-            val datePickerDialog = DatePickerDialog(this,
-                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> txtDate.setText(
-                    dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
-                )
+            val datePickerDialog = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                    txtDate.setText(
+                        dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
+                    )
                     mYear = year
                     mMonth = monthOfYear
                     mDay = dayOfMonth
@@ -106,23 +104,22 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             mMinute = c.get(Calendar.MINUTE)
 
 // Launch Time Picker Dialog
-            val timePickerDialog = TimePickerDialog(this,
-                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute")
-                    mHour=hourOfDay
+            val timePickerDialog = TimePickerDialog(
+                this,
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                    txtTime.setText("$hourOfDay:$minute")
+                    mHour = hourOfDay
                     mMinute = minute
                 }, mHour, mMinute, false
 
             )
             timePickerDialog.show()
         }
-        milisec = ((((mYear-1970)*365.24+(mMonth)*30.44+(mDay))*86400+(mHour-8)*3600+(mMinute+12)*60)*1000).toLong()
+        milisec =
+            ((((mYear - 1970) * 365.24 + (mMonth) * 30.44 + (mDay)) * 86400 + (mHour - 5) * 3600 + (mMinute + 12) * 60) * 1000).toLong()
     }
 
 
-    private fun getTaskTimeAsLong(): Long{
-        val time =( mYear*31556926+mMonth*2629743+mDay*86400+mHour*3600+mMinute*60)*1000
-        return time.toLong()
-    }
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
@@ -144,7 +141,8 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             txtTime.setText(
                 c.getString(
                     c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
-                ))
+                )
+            )
 
         }
     }
@@ -171,16 +169,19 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         val time = milisec
 //        val date = txtDate.text.toString()
 //        val time = txtTime.text.toString()
-        if (mRowId == null) {
-//             id = mDbAdapter.createTask(task,desc,date,time)
-            id = mDbAdapter.createTask(task,desc,time)
-            if (id > 0) mRowId = id
-        } else {
-            //  mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
-            mDbAdapter.updateTask(mRowId!!,task,desc,time)
+//        if (mRowId == null) {
+//            id = Math.random().toLong()
+////             id = mDbAdapter.createTask(task,desc,date,time)
+//            mDbAdapter.createTask(task,desc,time, id)
+//            if (id > 0) mRowId = id
+//        } else {
+//            //  mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
+//            mDbAdapter.updateTask(mRowId!!,task,desc,time)
 
-        }
-            //NotificationManager.setNotification(this, getTaskTimeAsLong())
+
+        NotificationManager.setNotification(this, time, task)
+        id = ToDoList.newItem(task, desc, (Math.random()*10000).toLong(), time)
+        mDbAdapter.write()
 
     }
 
@@ -189,6 +190,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         .setMessage("Вы действительно хотите выйти?")
         .setNegativeButton(android.R.string.no, null)
         .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+            ToDoList.delete(id)
             mDbAdapter.deleteTask(id)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

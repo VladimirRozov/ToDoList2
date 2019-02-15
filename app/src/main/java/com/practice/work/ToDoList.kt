@@ -12,7 +12,7 @@ object ToDoList {
 //        data.add(ToDoItem("2", 12345))
 //
 //    }
-    fun getItemById(id: Int): ToDoItem? {
+    fun getItemById(id: Long): ToDoItem? {
         for (item in data) {
             if (item.id == id) {
                 return item
@@ -29,5 +29,32 @@ object ToDoList {
         if(!data.contains(i)) {
             data.add(i)
         }
+    }
+
+    // return id
+    fun newItem(name: String, desc: String, id: Long, time: Long): Long{
+        val i = ToDoItem(name,time,id)
+        i.description = desc
+        add(i)
+        return id
+    }
+
+    fun commitToDB(db: DBAdapter){
+        try {
+            data.forEach {
+                db.createTask(it.name, it.description, it.millisec, it.id)
+            }
+        }catch (e:Exception){}
+    }
+
+    fun delete(i: ToDoItem){
+        data.remove(i)
+    }
+     fun delete(i:Long){
+         data.remove(getItemById(i))
+     }
+
+    fun deleteAll(){
+        data = mutableListOf()
     }
 }

@@ -21,20 +21,26 @@ class MainActivity : AppCompatActivity() {
     private var adapter: ItemAdapter? = null
     private var recyclerView: RecyclerView? = null
 
+    private var isStopApp = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        isStopApp = true
         setContentView(R.layout.activity_main)
 
-        mDbAdapter = DBAdapter(this)  //DB connection
-        mDbAdapter.open()
-        val fab = findViewById<View>(R.id.fab) as FloatingActionButton  //добавляет новую задачу
+        //DB connection
+        mDbAdapter = DBAdapter(this)
+
+        //кнопка добавляет новую задачу
+        val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener {
+            isStopApp = false
             val intent = Intent(this, NewTaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST)
         }
 
-        //следующий код до конца класса отвечает за вывод списка задач
+        //view отвечающая за список
         recyclerView = findViewById(R.id.to_do_list_container)
         recyclerView!!.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
 
@@ -43,13 +49,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+    }
+
     override fun onResume() {
         super.onResume()
         updateUI()
     }
 
     private fun updateUI() {
-        mDbAdapter.fillToDoList()
+        mDbAdapter.read()
         ToDoList.sort()
         if (adapter == null) {
             adapter = ItemAdapter(ToDoList.data)
@@ -71,10 +81,9 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("Вы действительно хотите удалить эту задачу?")
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+                    ToDoList.delete(id)
                     mDbAdapter.deleteTask(id)
-                    val intent = Intent(this@MainActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    updateUI()
                 }.create().show()
 
         }

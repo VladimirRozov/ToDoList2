@@ -21,15 +21,20 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     }
 
+
+
     companion object {
         private val DATABASE_NAME = "tasks"
         private val DATABASE_VERSION = 1
-        private val DATABASE_CREATE =
+         val DATABASE_CREATE =
             "CREATE TABLE task_data (" +
-                    "_id integer primary key autoincrement," +
+                    "_id integer primary key," +
                     "task text not null," +
                     "description text not null, " +
                     "time long not null);"
+         val DATABASE_DELETE =
+                "DROP TABLE IF EXISTS task_data;"
     }
+
 
 }

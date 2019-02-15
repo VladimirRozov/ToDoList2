@@ -16,6 +16,8 @@ import java.util.*
 object NotificationManager {
     val DEADLINE_NOTIFICATION_CHANNEL_ID = "666"
 
+    lateinit var describe_notification: String
+
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -32,7 +34,8 @@ object NotificationManager {
         Log.i("NOTIFY", "channel created")
     }
 
-    fun setNotification(context: Context, time: Long) {
+    fun setNotification(context: Context, time: Long, desc: String) {
+        describe_notification = desc
         val notifyIntent = Intent(context, Receiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context, 1, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -71,8 +74,8 @@ object NotificationManager {
         builder.setContentIntent(contentIntent)
             // обязательные настройки
             .setSmallIcon(R.drawable.bomb)
-            .setContentTitle("Завтра вам будет больно")
-            .setContentText("*описание причины боли*") // Текст уведомления
+            .setContentTitle("Час икс наступил")
+            .setContentText(describe_notification) // Текст уведомления
             // необязательные настройки
             .setTicker("Последнее китайское предупреждение!")
             .setWhen(System.currentTimeMillis())

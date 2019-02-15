@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 /**
  * по идее модель одной задачи, которая отвечает за ее поведение
  */
-class ToDoItem(var name: String, var millisec: Long, val id: Int): Comparable<ToDoItem>{
+class ToDoItem(var name: String, var millisec: Long, val id: Long): Comparable<ToDoItem>{
     override fun compareTo(other: ToDoItem): Int {
         return date.compareTo(other.date)
     }
@@ -17,7 +17,7 @@ class ToDoItem(var name: String, var millisec: Long, val id: Int): Comparable<To
     var date  = Date(millisec)
 
     fun getDateAsString(): String {
-        val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+        val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
 
         val calendar = GregorianCalendar(TimeZone.getTimeZone("Europe/Moscow"))
         calendar.timeInMillis = millisec
@@ -33,6 +33,15 @@ class ToDoItem(var name: String, var millisec: Long, val id: Int): Comparable<To
             return false
         }
 
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + millisec.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + date.hashCode()
+        return result
     }
 
 }
