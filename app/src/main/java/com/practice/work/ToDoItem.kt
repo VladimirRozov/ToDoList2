@@ -7,14 +7,13 @@ import java.text.SimpleDateFormat
 /**
  * по идее модель одной задачи, которая отвечает за ее поведение
  */
-class ToDoItem(var name: String, var millisec: Long): Comparable<ToDoItem>{
+class ToDoItem(var name: String, var millisec: Long, val id: Int): Comparable<ToDoItem>{
     override fun compareTo(other: ToDoItem): Int {
         return date.compareTo(other.date)
     }
 
 
     var description = ""
-    val id = UUID.randomUUID()
     var date  = Date(millisec)
 
     fun getDateAsString(): String {
@@ -24,6 +23,16 @@ class ToDoItem(var name: String, var millisec: Long): Comparable<ToDoItem>{
         calendar.timeInMillis = millisec
 
         return sdf.format(calendar.time)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        try{
+            val o: ToDoItem = other as ToDoItem
+            return id==o.id
+        }catch (e: Exception){
+            return false
+        }
+
     }
 
 }

@@ -6,11 +6,20 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import java.lang.Exception
+import java.util.*
 
 /**
  * отвечает за функции по обращению к бд для сохранения данных
  */
 class DBAdapter(private var mCtx: Context) {
+    companion object {
+        private val DATABASE_TABLE = "task_data"
+        val KEY_ROW_ID = "_id"
+        val KEY_TASK = "task"
+        val KEY_DESCRIPTION = "description"
+        //      val KEY_DATE = "date"
+        val KEY_TIME = "time"
+    }
 
     private lateinit var mDb: SQLiteDatabase
     private lateinit var mDbHelper: DBHelper
@@ -69,34 +78,27 @@ class DBAdapter(private var mCtx: Context) {
     fun mapToTask(c: Cursor): ToDoItem{
         try {
             val name = c.getString(
-                c.getColumnIndex("task")
+                c.getColumnIndex(KEY_TASK)
             )
             val time = c.getLong(
-                c.getColumnIndex("time")
+                c.getColumnIndex(KEY_TIME)
             )
             val desc = c.getString(
-                c.getColumnIndex("desc")
+                c.getColumnIndex(KEY_DESCRIPTION)
             )
-            val item = ToDoItem(name, time)
+            val id = c.getInt(
+                c.getColumnIndex(KEY_ROW_ID)
+            )
+            val item = ToDoItem(name, time, id)
             item.description = desc
             return item
         }catch (e: Exception){
-            return ToDoItem("ой все", 123456789876)
+            return ToDoItem("ой все", 123456789876, UUID.randomUUID().toString().toInt())
         }
     }
     fun fillToDoList(){
         val c = fetchAllTasks()
         while(c.moveToNext())
             ToDoList.add(mapToTask(c))
-    }
-
-
-     companion object {
-        private val DATABASE_TABLE = "task_data"
-        val KEY_ROW_ID = "_id"
-        val KEY_TASK = "task"
-        val KEY_DESCRIPTION = "description"
-        //      val KEY_DATE = "date"
-        val KEY_TIME = "time"
     }
 }

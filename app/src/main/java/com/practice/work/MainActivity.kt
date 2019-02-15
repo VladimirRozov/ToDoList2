@@ -4,6 +4,7 @@ package com.practice.work
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.*
@@ -24,8 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
-        NotificationManager.createNotificationChannel(this)
 
         mDbAdapter = DBAdapter(this)  //DB connection
         mDbAdapter.open()
@@ -59,12 +58,31 @@ class MainActivity : AppCompatActivity() {
             adapter!!.notifyDataSetChanged()
     }
 
-    private inner class ItemHolder(inflater: LayoutInflater, parent: ViewGroup) :
+    private inner class ItemHolder(inflater: LayoutInflater, parent: ViewGroup) : View.OnClickListener,
         RecyclerView.ViewHolder(inflater.inflate(R.layout.to_do_row, parent, false)) {
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            AlertDialog.Builder(this@MainActivity)
+                .setTitle("Удаление")
+                .setMessage("Вы действительно хотите удалить эту задачу?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+                    mDbAdapter.deleteTask(id)
+                    val intent = Intent(this@MainActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }.create().show()
+
+        }
 
         private var titleItemTextView: TextView = itemView.findViewById(R.id.item_text_view)
         private var descriptionItemTextView: TextView = itemView.findViewById(R.id.description_text_view)
         private var dateItemTextView: TextView = itemView.findViewById(R.id.date_text_view)
+        private var id: Long = 0
 
         private lateinit var item: ToDoItem
         fun bind(i: ToDoItem) {
@@ -72,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             titleItemTextView.text = item.name
             descriptionItemTextView.text = item.description
             dateItemTextView.text = item.getDateAsString()
+            id = item.id.toLong()
         }
     }
 

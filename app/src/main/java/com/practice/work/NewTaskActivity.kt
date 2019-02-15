@@ -151,7 +151,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onPause() {
         super.onPause()
-        //    saveState()
+        saveState()
     }
 
     override fun onResume() {
@@ -180,10 +180,12 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             mDbAdapter.updateTask(mRowId!!,task,desc,time)
 
         }
+            //NotificationManager.setNotification(this, getTaskTimeAsLong())
+
     }
 
     override fun onBackPressed() = AlertDialog.Builder(this)
-        .setTitle("Выйти из приложения?")
+        .setTitle("Отменить создание задачи")
         .setMessage("Вы действительно хотите выйти?")
         .setNegativeButton(android.R.string.no, null)
         .setPositiveButton(android.R.string.yes) { arg0, arg1 ->

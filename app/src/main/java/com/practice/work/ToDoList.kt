@@ -7,7 +7,12 @@ import java.util.*
  */
 object ToDoList {
     var data: MutableList<ToDoItem> = mutableListOf()
-    fun getItemById(id: UUID): ToDoItem? {
+//    init {
+//        data.add(ToDoItem("1", 1234567))
+//        data.add(ToDoItem("2", 12345))
+//
+//    }
+    fun getItemById(id: Int): ToDoItem? {
         for (item in data) {
             if (item.id == id) {
                 return item
@@ -21,6 +26,8 @@ object ToDoList {
     }
 
     fun add(i:ToDoItem){
-        data.add(i)
+        if(!data.contains(i)) {
+            data.add(i)
+        }
     }
 }
