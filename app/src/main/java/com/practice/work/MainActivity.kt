@@ -22,10 +22,6 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.ContextMenu
 
 
-
-
-
-
 class MainActivity : AppCompatActivity() {
     companion object {
         private val ADD_TASK_REQUEST = 0

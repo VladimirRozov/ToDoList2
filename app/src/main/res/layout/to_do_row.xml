@@ -109,5 +109,10 @@
                 android:layout_marginStart="10dp" android:layout_weight="1">
         </TextView>
     </LinearLayout>
-
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#7b7b7b"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp" />
 </LinearLayout>
