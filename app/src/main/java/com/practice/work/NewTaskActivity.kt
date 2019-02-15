@@ -8,7 +8,16 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.support.v7.app.AlertDialog
+import java.sql.Date
 import java.util.*
+import android.content.DialogInterface
+import android.content.Intent
+
+
+
+
+
 
 /**
  * обработчик формы по созданию задания и сохранение в БД
@@ -24,14 +33,14 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mTask: EditText
     private lateinit var mDesc: EditText
     private lateinit var mAdd: Button
-
     private var mYear: Int = 0
     private var mMonth: Int = 0
     private var mDay: Int = 0
     private var mHour: Int = 0
     private var mMinute: Int = 0
     private var mRowId: Long? = null
-
+    var milisec: Long = 0
+    var id:Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_task)
@@ -44,10 +53,12 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         mAdd = findViewById(R.id.btnAdd)
         btnDatePicker.setOnClickListener(this)
         btnTimePicker.setOnClickListener(this)
-
+        mAdd.isEnabled = false
+        val edList = arrayOf<EditText>(mTask, mDesc, txtDate, txtTime)
+        val textWatcher = CustomTextWatcher(edList, mAdd)
+        for (editText in edList) editText.addTextChangedListener(textWatcher)
         mDbAdapter = DBAdapter(this)  //DB connection
         mDbAdapter.open()
-
         mRowId = if (savedInstanceState == null)
             null
         else
@@ -63,6 +74,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             finish()
         }
     }
+
 
     override fun onClick(v: View) {
 
@@ -103,6 +115,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
             )
             timePickerDialog.show()
         }
+        milisec = ((((mYear-1970)*365.24+(mMonth)*30.44+(mDay))*86400+(mHour-8)*3600+(mMinute+12)*60)*1000).toLong()
     }
 
 
@@ -113,7 +126,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
-                startManagingCursor(c)
+            startManagingCursor(c)
             mTask.setText(
                 c!!.getString(
                     c.getColumnIndexOrThrow(DBAdapter.KEY_TASK)
@@ -124,21 +137,21 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
                     c.getColumnIndexOrThrow(DBAdapter.KEY_DESCRIPTION)
                 )
             )
-            txtDate.setText(
-                c.getString(
-                c.getColumnIndexOrThrow(DBAdapter.KEY_DATE)
-            ))
+//            txtDate.setText(
+//                c.getString(
+//                c.getColumnIndexOrThrow(DBAdapter.KEY_DATE)
+//            ))
             txtTime.setText(
                 c.getString(
-                c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
-            ))
+                    c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
+                ))
 
         }
     }
 
     override fun onPause() {
         super.onPause()
-        saveState()
+        //    saveState()
     }
 
     override fun onResume() {
@@ -155,17 +168,28 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveState() {
         val task = mTask.text.toString()
         val desc = mDesc.text.toString()
-        val date = txtDate.text.toString()
-        val time = txtTime.text.toString()
+        val time = milisec
+//        val date = txtDate.text.toString()
+//        val time = txtTime.text.toString()
         if (mRowId == null) {
-            val id = mDbAdapter.createTask(task,desc,date,time)
-            if (id > 0) {
-                mRowId = id
-            }
+//             id = mDbAdapter.createTask(task,desc,date,time)
+            id = mDbAdapter.createTask(task,desc,time)
+            if (id > 0) mRowId = id
         } else {
-            mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
+            //  mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
+            mDbAdapter.updateTask(mRowId!!,task,desc,time)
+
         }
     }
 
-
+    override fun onBackPressed() = AlertDialog.Builder(this)
+        .setTitle("Выйти из приложения?")
+        .setMessage("Вы действительно хотите выйти?")
+        .setNegativeButton(android.R.string.no, null)
+        .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+            mDbAdapter.deleteTask(id)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }.create().show()
 }
