@@ -5,7 +5,7 @@ import java.util.*
 /**
  * список задач
  */
-object toDoList {
+object ToDoList {
     var data: MutableList<ToDoItem> = mutableListOf()
     fun getItemById(id: UUID): ToDoItem? {
         for (item in data) {
@@ -14,5 +14,13 @@ object toDoList {
             }
         }
         return null
+    }
+
+    fun sort(){
+        data.sort()
+    }
+
+    fun add(i:ToDoItem){
+        data.add(i)
     }
 }

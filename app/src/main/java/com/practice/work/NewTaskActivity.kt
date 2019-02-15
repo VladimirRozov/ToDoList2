@@ -68,7 +68,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
         if (v === btnDatePicker) {
 
-            // Get Current Date
+// Get Current Date
             val c = Calendar.getInstance()
             mYear = c.get(Calendar.YEAR)
             mMonth = c.get(Calendar.MONTH)
@@ -79,28 +79,33 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth -> txtDate.setText(
                     dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year
                 )
+                    mYear = year
+                    mMonth = monthOfYear
+                    mDay = dayOfMonth
                 }, mYear, mMonth, mDay
             )
             datePickerDialog.show()
         }
         if (v === btnTimePicker) {
 
-            // Get Current Time
+// Get Current Time
             val c = Calendar.getInstance()
             mHour = c.get(Calendar.HOUR_OF_DAY)
             mMinute = c.get(Calendar.MINUTE)
 
-            // Launch Time Picker Dialog
+// Launch Time Picker Dialog
             val timePickerDialog = TimePickerDialog(this,
-                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute") }, mHour, mMinute, false
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> txtTime.setText("$hourOfDay:$minute")
+                    mHour=hourOfDay
+                    mMinute = minute
+                }, mHour, mMinute, false
+
             )
             timePickerDialog.show()
         }
-        NotificationManager.setNotification(this, getTaskTimeAsLong())
     }
 
 
-    //нужно вот этот метод поменять
     private fun getTaskTimeAsLong(): Long{
         val time =( mYear*31556926+mMonth*2629743+mDay*86400+mHour*3600+mMinute*60)*1000
         return time.toLong()

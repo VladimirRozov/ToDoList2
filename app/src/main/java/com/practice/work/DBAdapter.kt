@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
+import java.lang.Exception
 
 /**
  * отвечает за функции по обращению к бд для сохранения данных
@@ -65,7 +66,32 @@ class DBAdapter(private var mCtx: Context) {
         return c
     }
 
-    companion object {
+    fun mapToTask(c: Cursor): ToDoItem{
+        try {
+            val name = c.getString(
+                c.getColumnIndex("task")
+            )
+            val time = c.getLong(
+                c.getColumnIndex("time")
+            )
+            val desc = c.getString(
+                c.getColumnIndex("desc")
+            )
+            val item = ToDoItem(name, time)
+            item.description = desc
+            return item
+        }catch (e: Exception){
+            return ToDoItem("ой все", 123456789876)
+        }
+    }
+    fun fillToDoList(){
+        val c = fetchAllTasks()
+        while(c.moveToNext())
+            ToDoList.add(mapToTask(c))
+    }
+
+
+     companion object {
         private val DATABASE_TABLE = "task_data"
         val KEY_ROW_ID = "_id"
         val KEY_TASK = "task"
