@@ -1,5 +1,6 @@
 package com.practice.work
 
+import android.annotation.SuppressLint
 import java.util.*
 import java.text.SimpleDateFormat
 
@@ -14,8 +15,9 @@ class ToDoItem(var name: String, var millisec: Long, val id: Long): Comparable<T
 
 
     var description = ""
-    var date  = Date(millisec)
+    private var date  = Date(millisec)
 
+    @SuppressLint("SimpleDateFormat")
     fun getDateAsString(): String {
         val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
 
@@ -26,11 +28,11 @@ class ToDoItem(var name: String, var millisec: Long, val id: Long): Comparable<T
     }
 
     override fun equals(other: Any?): Boolean {
-        try{
+        return try{
             val o: ToDoItem = other as ToDoItem
-            return id==o.id
+            id==o.id
         }catch (e: Exception){
-            return false
+            false
         }
 
     }

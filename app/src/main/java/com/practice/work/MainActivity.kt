@@ -13,19 +13,17 @@ import android.support.v7.widget.LinearLayoutManager
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        private val ADD_TASK_REQUEST = 0
+        private const val ADD_TASK_REQUEST = 0
     }
 
     lateinit var mDbAdapter: DBAdapter
 
     private var adapter: ItemAdapter? = null
     private var recyclerView: RecyclerView? = null
-
     private var isStopApp = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         isStopApp = true
         setContentView(R.layout.activity_main)
 
@@ -42,16 +40,16 @@ class MainActivity : AppCompatActivity() {
 
         //view отвечающая за список
         recyclerView = findViewById(R.id.to_do_list_container)
-        recyclerView!!.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+        recyclerView!!.layoutManager = LinearLayoutManager(this)
 
 
         updateUI()
 
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
+//    override fun onStop() {
+//        super.onStop()
+//    }
 
     override fun onResume() {
         super.onResume()
@@ -80,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("Удаление")
                 .setMessage("Вы действительно хотите удалить эту задачу?")
                 .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+                .setPositiveButton(android.R.string.yes) { _, _ ->
                     ToDoList.delete(id)
                     mDbAdapter.deleteTask(id)
                     updateUI()
@@ -99,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             titleItemTextView.text = item.name
             descriptionItemTextView.text = item.description
             dateItemTextView.text = item.getDateAsString()
-            id = item.id.toLong()
+            id = item.id
         }
     }
 

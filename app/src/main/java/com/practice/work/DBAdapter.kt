@@ -6,19 +6,20 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import kotlin.Exception
+import java.lang.Exception
+import java.util.*
 
 /**
  * отвечает за функции по обращению к бд для сохранения данных
  */
 class DBAdapter(private var mCtx: Context) {
     companion object {
-        private val DATABASE_TABLE = "task_data"
-        val KEY_ROW_ID = "_id"
-        val KEY_TASK = "task"
-        val KEY_DESCRIPTION = "description"
+        private const val DATABASE_TABLE = "task_data"
+        const val KEY_ROW_ID = "_id"
+        const val KEY_TASK = "task"
+        const val KEY_DESCRIPTION = "description"
         //      val KEY_DATE = "date"
-        val KEY_TIME = "time"
+        const val KEY_TIME = "time"
     }
 
     private lateinit var mDb: SQLiteDatabase
@@ -31,19 +32,17 @@ class DBAdapter(private var mCtx: Context) {
         return this
     }
 
-    fun close() {
-        mDbHelper.close()
-    }
+//    fun close() {
+//        mDbHelper.close()
+//    }
 
-    fun createTask(task: String, description: String, time: Long, id: Long): Long {
+    fun createTask(task: String, description: String, time: Long): Long {
         val initialValues = ContentValues()
-        initialValues.put(KEY_ROW_ID, id)
         initialValues.put(KEY_TASK, task)
         initialValues.put(KEY_DESCRIPTION, description)
         //  initialValues.put(KEY_DATE, date)
         initialValues.put(KEY_TIME, time)
-        try {return mDb.insert(DATABASE_TABLE, null, initialValues)}
-        catch (e: android.database.sqlite.SQLiteConstraintException){return -666}
+        return mDb.insert(DATABASE_TABLE, null, initialValues)
     }
 
     fun deleteTask(id: Long): Boolean {
@@ -88,25 +87,24 @@ class DBAdapter(private var mCtx: Context) {
             val desc = c.getString(
                 c.getColumnIndex(KEY_DESCRIPTION)
             )
-            val id = c.getLong(
+            val id = c.getInt(
                 c.getColumnIndex(KEY_ROW_ID)
             )
-            val item = ToDoItem(name, time, id)
+            val item = ToDoItem(name, time, id.toLong())
             item.description = desc
             return item
         }catch (e: Exception){
-            return ToDoItem("ой все", 123456789876, Math.random().toLong())
+            return ToDoItem("ой все", 123456789876, UUID.randomUUID().toString().toLong())
         }
     }
-    fun fillToDoList(){
+    private fun fillToDoList(){
         val c = fetchAllTasks()
         while(c.moveToNext())
             ToDoList.add(mapToTask(c))
     }
-
     fun read(){
         open()
-       // mDb.execSQL(DBHelper.DATABASE_CREATE)
+        // mDb.execSQL(DBHelper.DATABASE_CREATE)
         fillToDoList()
         Log.i("DB_STEP", "read db")
 
@@ -115,10 +113,10 @@ class DBAdapter(private var mCtx: Context) {
     }
 
     fun write(){
-       // open()
-       // mDb.execSQL(DBHelper.DATABASE_CREATE)
+        // open()
+        // mDb.execSQL(DBHelper.DATABASE_CREATE)
         ToDoList.commitToDB(this)
-       // ToDoList.deleteAll()
+        // ToDoList.deleteAll()
         Log.i("DB_STEP", "write db")
 
     }
