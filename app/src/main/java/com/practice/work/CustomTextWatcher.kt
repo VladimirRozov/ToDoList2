@@ -7,13 +7,9 @@ import android.text.Editable
 import android.view.View
 
 
-class CustomTextWatcher(internal var edList: Array<EditText>, v: Button) : TextWatcher {
+class CustomTextWatcher(private var edList: Array<EditText>, v: Button) : TextWatcher {
 
-    internal var v: View
-
-    init {
-        this.v = v
-    }
+    private var v: View = v
 
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -21,11 +17,11 @@ class CustomTextWatcher(internal var edList: Array<EditText>, v: Button) : TextW
 
     override fun afterTextChanged(s: Editable) {
         for (editText in edList) {
-            if (editText.text.toString().trim { it <= ' ' }.length <= 0) {
-                v.setEnabled(false)
+            if (editText.text.toString().trim { it <= ' ' }.isEmpty()) {
+                v.isEnabled = false
                 break
             } else
-                v.setEnabled(true)
+                v.isEnabled = true
         }
     }
 }

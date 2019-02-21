@@ -12,7 +12,6 @@
             android:layout_height="wrap_content"
             android:text="Задание"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
-
     <EditText
             android:id="@+id/txtTask"
             android:layout_width="match_parent"
@@ -24,14 +23,13 @@
             android:layout_height="20dp"
             android:layout_marginBottom="10dp"
             android:text="Описание"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <EditText
             android:id="@+id/txtDesc"
             android:layout_width="fill_parent"
             android:layout_height="114dp"
             android:layout_marginBottom="10dp"/>
-
     <EditText
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -39,8 +37,7 @@
             android:layout_marginTop="8dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
+            android:layout_alignParentStart="true"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

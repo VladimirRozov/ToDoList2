@@ -1,7 +1,5 @@
 package com.practice.work
 
-import java.util.*
-
 /**
  * список задач
  */
@@ -12,7 +10,7 @@ object ToDoList {
 //        data.add(ToDoItem("2", 12345))
 //
 //    }
-    fun getItemById(id: Long): ToDoItem? {
+private fun getItemById(id: Long): ToDoItem? {
         for (item in data) {
             if (item.id == id) {
                 return item
@@ -42,19 +40,19 @@ object ToDoList {
     fun commitToDB(db: DBAdapter){
         try {
             data.forEach {
-                db.createTask(it.name, it.description, it.millisec, it.id)
+                db.createTask(it.name, it.description, it.millisec)
             }
         }catch (e:Exception){}
     }
 
-    fun delete(i: ToDoItem){
-        data.remove(i)
-    }
+//    fun delete(i: ToDoItem){
+//        data.remove(i)
+//    }
      fun delete(i:Long){
          data.remove(getItemById(i))
      }
 
-    fun deleteAll(){
-        data = mutableListOf()
-    }
+//    fun deleteAll(){
+//        data = mutableListOf()
+//    }
 }

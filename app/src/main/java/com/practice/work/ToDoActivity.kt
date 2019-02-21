@@ -1,5 +1,6 @@
 package com.practice.work
 
+import android.annotation.SuppressLint
 import android.app.ListActivity
 import android.content.Intent
 import android.os.Bundle
@@ -15,15 +16,17 @@ import android.widget.SimpleCursorAdapter
  */
 
 
+@SuppressLint("Registered")
+@Suppress("DEPRECATION")
 class ToDoActivity : ListActivity() {
     private lateinit var mDbAdapter: DBAdapter
 
     companion object {
-        private val ACTIVITY_CREATE = 0
-        private val ACTIVITY_EDIT = 1
+        private const val ACTIVITY_CREATE = 0
+        private const val ACTIVITY_EDIT = 1
 
-        val INSERT_ID = Menu.FIRST
-        val DELETE_ID = Menu.FIRST + 1
+        const val INSERT_ID = Menu.FIRST
+        const val DELETE_ID = Menu.FIRST + 1
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +38,12 @@ class ToDoActivity : ListActivity() {
         registerForContextMenu(listView)
     }
 
-    fun create() {
+    private fun create() {
         val i = Intent(this, NewTaskActivity::class.java)
         startActivityForResult(i, ACTIVITY_CREATE)
     }
 
-    fun fillData() {
+    private fun fillData() {
         val c = this.mDbAdapter.fetchAllTasks()
         startManagingCursor(c)
         val from = arrayOf(DBAdapter.KEY_TASK, DBAdapter.KEY_DESCRIPTION)
