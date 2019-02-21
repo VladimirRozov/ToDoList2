@@ -189,7 +189,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         .setTitle("Отменить создание задачи")
         .setMessage("Вы действительно хотите выйти?")
         .setNegativeButton(android.R.string.no, null)
-        .setPositiveButton(android.R.string.yes) { arg0, arg1 ->
+        .setPositiveButton(android.R.string.yes) { _, _ ->
             ToDoList.delete(id)
             mDbAdapter.deleteTask(id)
             val intent = Intent(this, MainActivity::class.java)
