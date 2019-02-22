@@ -16,6 +16,8 @@ class ToDoItem(var name: String, var millisec: Long, val id: Long): Comparable<T
 
     var description = ""
     private var date  = Date(millisec)
+    var duration = 1111
+    var durationResidue: Long = 0
 
     @SuppressLint("SimpleDateFormat")
     fun getDateAsString(): String {

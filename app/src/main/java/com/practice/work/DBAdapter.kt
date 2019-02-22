@@ -6,20 +6,25 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import java.lang.Exception
-import java.util.*
+import kotlin.Exception
 
 /**
  * отвечает за функции по обращению к бд для сохранения данных
  */
 class DBAdapter(private var mCtx: Context) {
+
     companion object {
-        private const val DATABASE_TABLE = "task_data"
+
+        const val DATABASE_TABLE_TASK = "task_data"
         const val KEY_ROW_ID = "_id"
         const val KEY_TASK = "task"
         const val KEY_DESCRIPTION = "description"
-        //      val KEY_DATE = "date"
         const val KEY_TIME = "time"
+
+        const val DATABASE_TABLE_PLAN = "plan_data"
+        const val KEY_PLAN = "plan"
+        const val KEY_START_TIME = "start"
+        const val KEY_END_TIME = "end"
     }
 
     private lateinit var mDb: SQLiteDatabase
@@ -32,21 +37,36 @@ class DBAdapter(private var mCtx: Context) {
         return this
     }
 
-//    fun close() {
-//        mDbHelper.close()
-//    }
+    fun close() {
+        mDbHelper.close()
+    }
 
-    fun createTask(task: String, description: String, time: Long): Long {
+    fun createTask(task: ToDoItem): Long {
         val initialValues = ContentValues()
-        initialValues.put(KEY_TASK, task)
-        initialValues.put(KEY_DESCRIPTION, description)
+        initialValues.put(KEY_ROW_ID, task.id)
+        initialValues.put(KEY_TASK, task.name)
+        initialValues.put(KEY_DESCRIPTION, task.description)
         //  initialValues.put(KEY_DATE, date)
-        initialValues.put(KEY_TIME, time)
-        return mDb.insert(DATABASE_TABLE, null, initialValues)
+        initialValues.put(KEY_TIME, task.millisec)
+        try {return mDb.insert(DATABASE_TABLE_TASK, null, initialValues)}
+        catch (e: android.database.sqlite.SQLiteConstraintException){return -666}
+    }
+
+    fun createPlan(planItem: PlanItem): Long{
+        val initialValues = ContentValues()
+        initialValues.put(KEY_ROW_ID, planItem.id)
+        initialValues.put(KEY_PLAN, planItem.name)
+        initialValues.put(KEY_DESCRIPTION, planItem.description)
+        //  initialValues.put(KEY_DATE, date)
+        initialValues.put(KEY_START_TIME, planItem.timeStart)
+        initialValues.put(KEY_END_TIME, planItem.timeEnd)
+        initialValues.put(KEY_TASK, planItem.task?.id)
+        try {return mDb.insert(DATABASE_TABLE_PLAN, null, initialValues)}
+        catch (e: android.database.sqlite.SQLiteConstraintException){return -666}
     }
 
     fun deleteTask(id: Long): Boolean {
-        return mDb.delete(DATABASE_TABLE, "$KEY_ROW_ID = $id", null) > 0
+        return mDb.delete(DATABASE_TABLE_TASK, "$KEY_ROW_ID = $id", null) > 0
     }
 
     fun updateTask(id: Long, task: String, description: String, time: Long): Boolean {
@@ -55,16 +75,16 @@ class DBAdapter(private var mCtx: Context) {
         initialValues.put(KEY_DESCRIPTION, description)
         //initialValues.put(KEY_DATE, date)
         initialValues.put(KEY_TIME, time)
-        return mDb.update(DATABASE_TABLE, initialValues, "$KEY_ROW_ID = $id", null) > 0
+        return mDb.update(DATABASE_TABLE_TASK, initialValues, "$KEY_ROW_ID = $id", null) > 0
     }
 
     fun fetchAllTasks(): Cursor {
-        return mDb.query(DATABASE_TABLE, arrayOf(KEY_ROW_ID, KEY_TASK, KEY_DESCRIPTION,  KEY_TIME), null, null, null, null, null)
+        return mDb.query(DATABASE_TABLE_TASK, arrayOf(KEY_ROW_ID, KEY_TASK, KEY_DESCRIPTION,  KEY_TIME), null, null, null, null, null)
     }
 
     fun fetchTask(id: Long): Cursor? {
         val c = mDb.query(
-            DATABASE_TABLE,
+            DATABASE_TABLE_TASK,
             arrayOf(KEY_ROW_ID, KEY_TASK, KEY_DESCRIPTION,  KEY_TIME),
             "$KEY_ROW_ID = $id",
             null,
@@ -87,24 +107,25 @@ class DBAdapter(private var mCtx: Context) {
             val desc = c.getString(
                 c.getColumnIndex(KEY_DESCRIPTION)
             )
-            val id = c.getInt(
+            val id = c.getLong(
                 c.getColumnIndex(KEY_ROW_ID)
             )
-            val item = ToDoItem(name, time, id.toLong())
+            val item = ToDoItem(name, time, id)
             item.description = desc
             return item
         }catch (e: Exception){
-            return ToDoItem("ой все", 123456789876, UUID.randomUUID().toString().toLong())
+            return ToDoItem("ой все", 123456789876, Math.random().toLong())
         }
     }
-    private fun fillToDoList(){
+    fun fillToDoList(){
         val c = fetchAllTasks()
         while(c.moveToNext())
             ToDoList.add(mapToTask(c))
     }
+
     fun read(){
         open()
-        // mDb.execSQL(DBHelper.DATABASE_CREATE)
+       // mDb.execSQL(DBHelper.DATABASE_CREATE)
         fillToDoList()
         Log.i("DB_STEP", "read db")
 
@@ -113,10 +134,10 @@ class DBAdapter(private var mCtx: Context) {
     }
 
     fun write(){
-        // open()
-        // mDb.execSQL(DBHelper.DATABASE_CREATE)
+       // open()
+       // mDb.execSQL(DBHelper.DATABASE_CREATE)
         ToDoList.commitToDB(this)
-        // ToDoList.deleteAll()
+       // ToDoList.deleteAll()
         Log.i("DB_STEP", "write db")
 
     }

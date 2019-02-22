@@ -11,6 +11,7 @@ import android.view.*
 import android.widget.TextView
 import android.support.v7.widget.LinearLayoutManager
 
+
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val ADD_TASK_REQUEST = 0
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         //DB connection
         mDbAdapter = DBAdapter(this)
+        NotificationManager.createNotificationChannel(this)
 
         //кнопка добавляет новую задачу
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
