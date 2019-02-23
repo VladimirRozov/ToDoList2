@@ -40,8 +40,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private var mRowId: Long? = null
     private var milisec: Long = 0
     var id:Long = 0
-    private var data1s: Long = 0
-    private var data2s: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.new_task)
@@ -100,7 +99,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
         // инициализируем диалог выбора времени текущими значениями
         val timePickerDialog = TimePickerDialog(this,
-            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 val editTextTimeParam = "$hourOfDay : $minute"
                 txtTime.setText(editTextTimeParam)
             }, mHour, mMinute, false
@@ -117,7 +116,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
         // инициализируем диалог выбора даты текущими значениями
         val datePickerDialog = DatePickerDialog(this,
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 val editTextDateParam = dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year
                 txtDate.setText(editTextDateParam)
             }, mYear, mMonth, mDay
@@ -191,7 +190,8 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 //        }
         NotificationManager.setNotification(this, time, task)
         id = ToDoList.newItem(task, desc, (Math.random()*10000).toLong(), time)
-        mDbAdapter.write()
+        //вот тут было дублирование!
+       // mDbAdapter.write()
 
     }
 
@@ -200,6 +200,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         .setMessage("Вы действительно хотите выйти?")
         .setNegativeButton(android.R.string.no, null)
         .setPositiveButton(android.R.string.yes) { _, _ ->
+            ToDoList.delete(id)
             mDbAdapter.deleteTask(id)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

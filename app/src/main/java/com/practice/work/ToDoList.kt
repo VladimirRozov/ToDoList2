@@ -45,14 +45,14 @@ private fun getItemById(id: Long): ToDoItem? {
         }catch (e:Exception){}
     }
 
-//    fun delete(i: ToDoItem){
-//        data.remove(i)
-//    }
+    fun delete(i: ToDoItem){
+        data.remove(i)
+    }
      fun delete(i:Long){
          data.remove(getItemById(i))
      }
 
-//    fun deleteAll(){
-//        data = mutableListOf()
-//    }
+    fun deleteAll(){
+        data = mutableListOf()
+    }
 }

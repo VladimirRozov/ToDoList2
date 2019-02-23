@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private var isStopApp = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         isStopApp = true
         setContentView(R.layout.activity_main)
