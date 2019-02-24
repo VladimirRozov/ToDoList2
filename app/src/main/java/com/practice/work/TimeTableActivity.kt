@@ -29,21 +29,21 @@ class TimeTableActivity : AppCompatActivity() {
     val myPrefs21 = "myprefs"
     val myPrefs22 = "myprefs"
 
-    var task8 = ""
-    var task9 = ""
-    var task10 = ""
-    var task11 = ""
-    var task12 = ""
-    var task13 = ""
-    var task14 = ""
-    var task15 = ""
-    var task16 = ""
-    var task17 = ""
-    var task18 = ""
-    var task19 = ""
-    var task20 = ""
-    var task21 = ""
-    var task22 = ""
+    var task8 = "task8"
+    var task9 = "task9"
+    var task10 = "task10"
+    var task11 = "task11"
+    var task12 = "task12"
+    var task13 = "task13"
+    var task14 = "task14"
+    var task15 = "task15"
+    var task16 = "task16"
+    var task17 = "task17"
+    var task18 = "task18"
+    var task19 = "task19"
+    var task20 = "task20"
+    var task21 = "task21"
+    var task22 = "task22"
 
     lateinit var record8:EditText
     lateinit var record9:EditText
@@ -127,7 +127,7 @@ class TimeTableActivity : AppCompatActivity() {
     private fun saveText(etText:EditText, task:String, pref: String) {
         val sPref: SharedPreferences = getSharedPreferences(pref , Context.MODE_PRIVATE)
         val tasker = etText.text.toString()
-        if(tasker != ".") {
+        if(tasker != "") {
             etText.isEnabled = false
             etText.isCursorVisible = false
             etText.setBackgroundColor(Color.TRANSPARENT)
@@ -136,8 +136,6 @@ class TimeTableActivity : AppCompatActivity() {
         val ed = sPref.edit()
         ed.putString(task, tasker)
         ed.apply()
-
-        Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show()
     }
 
     private fun loadText(etText:EditText, task:String, pref:String) {
@@ -145,13 +143,12 @@ class TimeTableActivity : AppCompatActivity() {
         val saveText = sPref.getString(task,"")
 
         if (saveText != "") {
-            etText.isEnabled = false
-            etText.isCursorVisible = false
-            etText.setBackgroundColor(Color.TRANSPARENT)
-            etText.keyListener = null
+//            etText.isEnabled = false
+//            etText.isCursorVisible = false
+//            etText.setBackgroundColor(Color.TRANSPARENT)
+//            etText.keyListener = null
             etText.setText(saveText)
         }
-        Toast.makeText(this, "Text loaded", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
@@ -172,4 +169,5 @@ class TimeTableActivity : AppCompatActivity() {
         saveText(record21, task21, myPrefs21)
         saveText(record22, task22, myPrefs22)
     }
+
 }
