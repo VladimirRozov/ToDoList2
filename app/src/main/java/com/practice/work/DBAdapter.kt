@@ -32,9 +32,9 @@ class DBAdapter(private var mCtx: Context) {
         return this
     }
 
-//    fun close() {
-//        mDbHelper.close()
-//    }
+    fun close() {
+        mDbHelper.close()
+    }
 
     fun createTask(task: String, description: String, time: Long): Long {
         val initialValues = ContentValues()
@@ -120,4 +120,5 @@ class DBAdapter(private var mCtx: Context) {
         Log.i("DB_STEP", "write db")
 
     }
+
 }

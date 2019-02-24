@@ -16,7 +16,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
+                android:background="@color/design_default_color_primary_dark"
+                app:popupTheme="@string/title_dashboard"
                 android:theme="@style/Animation.AppCompat.Dialog"/>
 
     </android.support.design.widget.AppBarLayout>
