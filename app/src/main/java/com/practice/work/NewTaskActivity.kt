@@ -1,6 +1,5 @@
 package com.practice.work
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,10 +11,6 @@ import android.widget.EditText
 import android.support.v7.app.AlertDialog
 import java.util.*
 import android.content.Intent
-import java.text.SimpleDateFormat
-
-
-
 
 /**
  * обработчик формы по созданию задания и сохранение в БД

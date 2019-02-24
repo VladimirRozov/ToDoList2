@@ -7,8 +7,8 @@
     <string name="description">Описание:</string>
     <string name="date">Дата:</string>
     <string name="time">Время:</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="title_home">Начало работы</string>
     <string name="title_dashboard">Расписание</string>
     <string name="title_notifications">Задачи</string>
+    <string name="title_activity_time_table">TimeTable</string>
 </resources>

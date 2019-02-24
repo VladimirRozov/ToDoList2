@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-                val intent = Intent(this, NewTaskActivity::class.java)
+                val intent = Intent(this, TimeTableActivity::class.java)
                 startActivityForResult(intent, 0)
             }
             R.id.navigation_notifications -> {
