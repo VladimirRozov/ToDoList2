@@ -86,22 +86,22 @@ class TimeTableActivity : AppCompatActivity() {
         record21=findViewById(R.id.task21)
         record22=findViewById(R.id.task22)
 
-
-        loadText(record8, task8, myPrefs8)
-        loadText(record9, task9,myPrefs9)
-        loadText(record10, task10,myPrefs10)
-        loadText(record11, task11,myPrefs11)
-        loadText(record12, task12,myPrefs12)
-        loadText(record13, task13,myPrefs13)
-        loadText(record14, task14,myPrefs14)
-        loadText(record15, task15,myPrefs15)
-        loadText(record16, task16,myPrefs16)
-        loadText(record17, task17,myPrefs17)
-        loadText(record18,task18, myPrefs18)
-        loadText(record19, task19,myPrefs19)
-        loadText(record20, task20,myPrefs20)
-        loadText(record21, task21,myPrefs21)
-        loadText(record22,task22, myPrefs22)
+//это тсроковые переменные, в которых хранятся таски для расписания по времени
+        var textTask8 = loadText(record8, task8, myPrefs8)
+        var textTask9 = loadText(record9, task9,myPrefs9)
+        var textTask10 = loadText(record10, task10,myPrefs10)
+        var textTask11 = loadText(record11, task11,myPrefs11)
+        var textTask12 = loadText(record12, task12,myPrefs12)
+        var textTask13 = loadText(record13, task13,myPrefs13)
+        var textTask14 = loadText(record14, task14,myPrefs14)
+        var textTask15 = loadText(record15, task15,myPrefs15)
+        var textTask16 = loadText(record16, task16,myPrefs16)
+        var textTask17 = loadText(record17, task17,myPrefs17)
+        var textTask18 = loadText(record18,task18, myPrefs18)
+        var textTask19 = loadText(record19, task19,myPrefs19)
+        var textTask20 = loadText(record20, task20,myPrefs20)
+        var textTask21 = loadText(record21, task21,myPrefs21)
+        var textTask22 = loadText(record22,task22, myPrefs22)
 
         fab.setOnClickListener {
             //реализация сохранения
@@ -138,7 +138,7 @@ class TimeTableActivity : AppCompatActivity() {
         ed.apply()
     }
 
-    private fun loadText(etText:EditText, task:String, pref:String) {
+    private fun loadText(etText:EditText, task:String, pref:String): String? {
         val sPref: SharedPreferences = getSharedPreferences(pref,Context.MODE_PRIVATE)
         val saveText = sPref.getString(task,"")
 
@@ -149,6 +149,7 @@ class TimeTableActivity : AppCompatActivity() {
 //            etText.keyListener = null
             etText.setText(saveText)
         }
+        return saveText
     }
 
     override fun onDestroy() {
