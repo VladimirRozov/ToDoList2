@@ -1,6 +1,7 @@
 package com.practice.work
 
 import android.annotation.SuppressLint
+import android.util.Log
 import java.util.*
 import java.text.SimpleDateFormat
 
@@ -17,14 +18,9 @@ class ToDoItem(var name: String, var millisec: Long, val id: Long): Comparable<T
     var description = ""
     private var date  = Date(millisec)
 
-    @SuppressLint("SimpleDateFormat")
     fun getDateAsString(): String {
         val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm")
-
-        val calendar = GregorianCalendar(TimeZone.getTimeZone("Europe/Moscow"))
-        calendar.timeInMillis = millisec
-
-        return sdf.format(calendar.time)
+        return sdf.format(date)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -11,6 +11,8 @@ import android.widget.EditText
 import android.support.v7.app.AlertDialog
 import java.util.*
 import android.content.Intent
+import android.util.Log
+import kotlinx.android.synthetic.main.new_task.*
 
 /**
  * обработчик формы по созданию задания и сохранение в БД
@@ -27,11 +29,13 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mTask: EditText
     private lateinit var mDesc: EditText
     private lateinit var mAdd: Button
-    private var mYear: Int = 0
-    private var mMonth: Int = 0
-    private var mDay: Int = 0
-    private var mHour: Int = 0
-    private var mMinute: Int = 0
+//    private var mYear: Int = 0
+//    private var mMonth: Int = 0
+//    private var mDay: Int = 0
+//    private var mHour: Int = 0
+//    private var mMinute: Int = 0
+    val calendarNow = Calendar.getInstance()
+    var calendarForSave = Calendar.getInstance()
     private var mRowId: Long? = null
     private var milisec: Long = 0
     var id:Long = 0
@@ -46,19 +50,24 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         txtDate = findViewById(R.id.in_date)
         txtTime = findViewById(R.id.in_time)
         mAdd = findViewById(R.id.btnAdd)
+
         btnDatePicker.setOnClickListener(this)
         btnTimePicker.setOnClickListener(this)
+
         mAdd.isEnabled = false
+
         val edList = arrayOf(mTask, mDesc, txtDate, txtTime)
         val textWatcher = CustomTextWatcher(edList, mAdd)
         for (editText in edList) editText.addTextChangedListener(textWatcher)
+
         mDbAdapter = DBAdapter(this)  //DB connection
         mDbAdapter.open()
-            // может тут поковыряться с отменой
+
         mRowId = if (savedInstanceState == null)
             null
         else
             savedInstanceState.getSerializable(DBAdapter.KEY_ROW_ID) as Long
+
         if (mRowId == null) {
             val extras = intent.extras
             mRowId = extras?.getLong(DBAdapter.KEY_ROW_ID)
@@ -76,54 +85,55 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
 
         when (v) {
-            btnDatePicker ->
+            btnDatePicker -> {
                 // вызываем диалог с выбором даты
                 callDatePicker()
 
-            btnTimePicker ->
+            btnTimePicker -> {
                 // вызываем диалог с выбором времени
                 callTimePicker()
         }
     }
 
     private fun callTimePicker() {
-        // получаем текущее время
-        val cal = Calendar.getInstance()
-        mHour = cal.get(Calendar.HOUR_OF_DAY)
-        mMinute = cal.get(Calendar.MINUTE)
-
         // инициализируем диалог выбора времени текущими значениями
         val timePickerDialog = TimePickerDialog(this,
+
             TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 val editTextTimeParam = "$hourOfDay : $minute"
                 txtTime.setText(editTextTimeParam)
-            }, mHour, mMinute, false
+                calendarForSave.set(Calendar.HOUR, hourOfDay)
+                calendarForSave.set(Calendar.MINUTE, minute)
+            },
+
+            calendarNow.get(Calendar.HOUR), calendarNow.get(Calendar.MINUTE), true
         )
         timePickerDialog.show()
     }
 
     private fun callDatePicker() {
-        // получаем текущую дату
-        val cal = Calendar.getInstance()
-        mYear = cal.get(Calendar.YEAR)
-        mMonth = cal.get(Calendar.MONTH)
-        mDay = cal.get(Calendar.DAY_OF_MONTH)
 
         // инициализируем диалог выбора даты текущими значениями
         val datePickerDialog = DatePickerDialog(this,
+
             DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 val editTextDateParam = dayOfMonth.toString() + "." + (monthOfYear + 1) + "." + year
                 txtDate.setText(editTextDateParam)
-            }, mYear, mMonth, mDay
+                calendarForSave.set(year, monthOfYear, dayOfMonth)
+            },
+
+            calendarNow.get(Calendar.YEAR),
+            calendarNow.get(Calendar.MONTH),
+            calendarNow.get(Calendar.DAY_OF_MONTH)
+
         )
+
+
         datePickerDialog.show()
     }
 
 
-    private fun getTaskTimeAsLong(): Long{
-        val time =((((mYear - 1970) * 365.24 + (mMonth) * 30.44 + (mDay)) * 86400 + (mHour) * 3600 + (mMinute) * 60-8*3600+12*60) * 1000)
-        return time.toLong()
-    }
+
     private fun populateFields() {
         if (mRowId != null) {
             val c = mDbAdapter.fetchTask(mRowId!!)
@@ -138,10 +148,6 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
                     c.getColumnIndexOrThrow(DBAdapter.KEY_DESCRIPTION)
                 )
             )
-//            txtDate.setText(
-//                c.getString(
-//                c.getColumnIndexOrThrow(DBAdapter.KEY_DATE)
-//            ))
             txtTime.setText(
                 c.getString(
                     c.getColumnIndexOrThrow(DBAdapter.KEY_TIME)
@@ -169,14 +175,14 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveState() {
         val task = mTask.text.toString()
         val desc = mDesc.text.toString()
-        milisec =   ((((mYear - 1970) * 365.24 + (mMonth) * 30.44 + (mDay)) * 86400 + (mHour) * 3600 + (mMinute) * 60-8*3600+12*60) * 1000).toLong()
-//        print("русский"+milisec)
-        val time = milisec
 
-        //NotificationManager.setNotification(this, time, task)
-        id = ToDoList.newItem(task, desc, (Math.random()*10000).toLong(), time)
-        //вот тут было дублирование!
-       // mDbAdapter.write()
+        //устанавливаем время в милисекундах
+        milisec = calendarForSave.timeInMillis
+
+        //создаем новую задачу, которая отражается в списке
+        id = ToDoList.newItem(task, desc, (Math.random()*10000).toLong(), milisec)
+
+        Log.i("TIME", "time saved $milisec")
 
     }
 
