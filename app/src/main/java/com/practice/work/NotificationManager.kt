@@ -10,21 +10,28 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.os.PowerManager
+import android.text.format.Time
+import java.text.SimpleDateFormat
+import java.util.*
 
+//import java.util.*
 
+//еще раз
 object NotificationManager {
-    val DEADLINE_NOTIFICATION_CHANNEL_ID = "666"
+    //можно повесить настройки
+     const val DEADLINE_NOTIFICATION_CHANNEL_ID = "666"
+     const val SUGGESTION_NOTIFICATION_CHANNEL_ID = "777"
 
-    lateinit var describe_notification: String
-
-    fun createNotificationChannel(context: Context) {
+    //создание группы для уведомлений
+    fun createNotificationChannel(context: Context, channelName: String, desc: String, channel_id: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            val name = "deadlines"
-            val descriptionText = "AAAAAAA"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel = NotificationChannel(DEADLINE_NOTIFICATION_CHANNEL_ID, name, importance)
-            mChannel.description = descriptionText
+            val mChannel = NotificationChannel(channel_id, channelName, importance)
+            mChannel.description = desc
 
             val notificationManager =
                 context.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
@@ -33,34 +40,55 @@ object NotificationManager {
         Log.i("NOTIFY", "channel created")
     }
 
-    fun setNotification(context: Context, time: Long, desc: String) {
-        describe_notification = desc
-        val notifyIntent = Intent(context, Receiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 1, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    //настройка периодичности проверки на свободное время
+    //вызывается каждый час с момента загрузки
+    fun setNotification(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            pendingIntent)
     }
 
-
+    //условия вызова уведомления
     class NotifyService : IntentService("NotificationManager") {
         override fun onHandleIntent(intent: Intent?) {
-            makeNotification(this)
+            val now = SimpleDateFormat("HH").format(Calendar.getInstance().time)
+            Log.i("NOTIFY", now)
+            if (TimeTableActivity.tasks[now] != null)
+                Log.i("NOTIFY", TimeTableActivity.tasks[now])
+            if (TimeTableActivity.tasks[now] == null)
+                makeNotification(this, DEADLINE_NOTIFICATION_CHANNEL_ID, "Хотите сделать что-нибудь полезное?", "Кажется, сейчас свободное время")
             Log.i("NOTIFY", "It's work!!!")
         }
     }
 
-    class Receiver : BroadcastReceiver() {
+    class AlarmReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-
             val intent1 = Intent(context, NotifyService::class.java)
             context.startService(intent1)
         }
     }
 
 
+    //возвращает 8 часов текущего дня (начало отсчета для уведомлений)
+    private fun getTime(hour: String, min: String): Long {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        //Настраиваем время (здесь 8 утра) отправки ежедневного уведомления
+        calendar.set(
+            Calendar.HOUR_OF_DAY,
+            Integer.getInteger(hour, 8)!!,
+            Integer.getInteger(min, 0)!!
+        )
+        return calendar.timeInMillis
+    }
 
 
-    private fun makeNotification(context: Context) {
+    //билд и вызов оповещения
+     private fun makeNotification(context: Context, channel_id: String, describe_notification: String, title: String) {
         val notificationIntent = Intent(context, MainActivity::class.java)
         val contentIntent = PendingIntent.getActivity(
             context,
@@ -68,12 +96,12 @@ object NotificationManager {
             PendingIntent.FLAG_CANCEL_CURRENT
         )
 
-        val builder = NotificationCompat.Builder(context, DEADLINE_NOTIFICATION_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, channel_id)
 
         builder.setContentIntent(contentIntent)
             // обязательные настройки
             .setSmallIcon(R.drawable.bomb)
-            .setContentTitle("Час икс наступил")
+            .setContentTitle(title)
             .setContentText(describe_notification) // Текст уведомления
             // необязательные настройки
             .setTicker("Последнее китайское предупреждение!")
@@ -82,6 +110,7 @@ object NotificationManager {
 
 
         val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
-        notificationManager.notify(1, builder.build())
+        val n = builder.build()
+        notificationManager.notify(1, n)
     }
 }

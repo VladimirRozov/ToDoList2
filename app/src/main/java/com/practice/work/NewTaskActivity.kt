@@ -172,18 +172,8 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         milisec =   ((((mYear - 1970) * 365.24 + (mMonth) * 30.44 + (mDay)) * 86400 + (mHour) * 3600 + (mMinute) * 60-8*3600+12*60) * 1000).toLong()
 //        print("русский"+milisec)
         val time = milisec
-//        val date = txtDate.text.toString()
-//        val time = txtTime.text.toString()
-//        if (mRowId == null) {
-////             id = mDbAdapter.createTask(task,desc,date,time)
-//            id = mDbAdapter.createTask(task,desc,time)
-//            if (id > 0) mRowId = id
-//        } else {
-//            //  mDbAdapter.updateTask(mRowId!!,task,desc,date,time)
-//            mDbAdapter.updateTask(mRowId!!,task,desc,time)
-//
-//        }
-        NotificationManager.setNotification(this, time, task)
+
+        //NotificationManager.setNotification(this, time, task)
         id = ToDoList.newItem(task, desc, (Math.random()*10000).toLong(), time)
         //вот тут было дублирование!
        // mDbAdapter.write()

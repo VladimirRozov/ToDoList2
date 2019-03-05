@@ -45,6 +45,28 @@ class TimeTableActivity : AppCompatActivity() {
     var task21 = "task21"
     var task22 = "task22"
 
+    companion object {
+        var tasks: MutableMap<String, String?> = mutableMapOf()
+    }
+    private fun updateTasks(){
+        tasks = mutableMapOf()
+        tasks["8"] = textTask8
+        tasks["9"] = textTask9
+        tasks["10"] = textTask10
+        tasks["11"] = textTask11
+        tasks["12"] = textTask12
+        tasks["13"] = textTask13
+        tasks["14"] = textTask14
+        tasks["15"] = textTask15
+        tasks["16"] = textTask16
+        tasks["17"] = textTask17
+        tasks["18"] = textTask18
+        tasks["19"] = textTask19
+        tasks["20"] = textTask20
+        tasks["21"] = textTask21
+        tasks["22"] = textTask22
+    }
+
     lateinit var record8:EditText
     lateinit var record9:EditText
     lateinit var record10:EditText
@@ -61,6 +83,22 @@ class TimeTableActivity : AppCompatActivity() {
     lateinit var record21:EditText
     lateinit var record22:EditText
 
+    var textTask8: String? = null
+    var textTask9: String? = null
+    var textTask10: String? = null
+    var textTask11: String? = null
+    var textTask12: String? = null
+    var textTask13: String? = null
+    var textTask14: String? = null
+    var textTask15 : String? = null
+    var textTask16 : String? = null
+    var textTask17 : String? = null
+    var textTask18 : String? = null
+    var textTask19 : String? = null
+    var textTask20 : String? = null
+    var textTask21 : String? = null
+    var textTask22 : String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_time_table)
@@ -70,6 +108,7 @@ class TimeTableActivity : AppCompatActivity() {
         val str = "$mDay.$mMonth"
         toolbar.title=str
             setSupportActionBar(toolbar)
+
         record8=findViewById(R.id.task8)
         record9=findViewById(R.id.task9)
         record10=findViewById(R.id.task10)
@@ -87,21 +126,21 @@ class TimeTableActivity : AppCompatActivity() {
         record22=findViewById(R.id.task22)
 
 //это тсроковые переменные, в которых хранятся таски для расписания по времени
-        var textTask8 = loadText(record8, task8, myPrefs8)
-        var textTask9 = loadText(record9, task9,myPrefs9)
-        var textTask10 = loadText(record10, task10,myPrefs10)
-        var textTask11 = loadText(record11, task11,myPrefs11)
-        var textTask12 = loadText(record12, task12,myPrefs12)
-        var textTask13 = loadText(record13, task13,myPrefs13)
-        var textTask14 = loadText(record14, task14,myPrefs14)
-        var textTask15 = loadText(record15, task15,myPrefs15)
-        var textTask16 = loadText(record16, task16,myPrefs16)
-        var textTask17 = loadText(record17, task17,myPrefs17)
-        var textTask18 = loadText(record18,task18, myPrefs18)
-        var textTask19 = loadText(record19, task19,myPrefs19)
-        var textTask20 = loadText(record20, task20,myPrefs20)
-        var textTask21 = loadText(record21, task21,myPrefs21)
-        var textTask22 = loadText(record22,task22, myPrefs22)
+        textTask8 = loadText(record8, task8, myPrefs8)
+        textTask9 = loadText(record9, task9,myPrefs9)
+        textTask10 = loadText(record10, task10,myPrefs10)
+        textTask11 = loadText(record11, task11,myPrefs11)
+        textTask12 = loadText(record12, task12,myPrefs12)
+        textTask13 = loadText(record13, task13,myPrefs13)
+        textTask14 = loadText(record14, task14,myPrefs14)
+        textTask15 = loadText(record15, task15,myPrefs15)
+        textTask16 = loadText(record16, task16,myPrefs16)
+        textTask17 = loadText(record17, task17,myPrefs17)
+        textTask18 = loadText(record18,task18, myPrefs18)
+        textTask19 = loadText(record19, task19,myPrefs19)
+        textTask20 = loadText(record20, task20,myPrefs20)
+        textTask21 = loadText(record21, task21,myPrefs21)
+        textTask22 = loadText(record22,task22, myPrefs22)
 
         fab.setOnClickListener {
             //реализация сохранения
@@ -121,6 +160,8 @@ class TimeTableActivity : AppCompatActivity() {
             saveText(record21, task21, myPrefs21)
             saveText(record22, task22, myPrefs22)
             onBackPressed()
+
+            updateTasks()
         }
     }
 
@@ -136,6 +177,8 @@ class TimeTableActivity : AppCompatActivity() {
         val ed = sPref.edit()
         ed.putString(task, tasker)
         ed.apply()
+
+        updateTasks()
     }
 
     private fun loadText(etText:EditText, task:String, pref:String): String? {
@@ -150,6 +193,8 @@ class TimeTableActivity : AppCompatActivity() {
             etText.setText(saveText)
         }
         return saveText
+
+        updateTasks()
     }
 
     override fun onDestroy() {

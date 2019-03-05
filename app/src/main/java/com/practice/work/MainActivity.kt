@@ -31,5 +31,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        NotificationManager.createNotificationChannel(this, "sugg", "", NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
+        //NotificationManager.createNotificationChannel()
+        NotificationManager.setNotification(this)
     }
 }
