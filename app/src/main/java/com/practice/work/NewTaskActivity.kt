@@ -12,7 +12,8 @@ import android.support.v7.app.AlertDialog
 import java.util.*
 import android.content.Intent
 import android.util.Log
-import kotlinx.android.synthetic.main.new_task.*
+import com.practice.work.activities.MainActivity
+import com.practice.work.model.ToDoList
 
 /**
  * обработчик формы по созданию задания и сохранение в БД
@@ -85,11 +86,11 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
 
         when (v) {
-            btnDatePicker -> {
+            btnDatePicker ->
                 // вызываем диалог с выбором даты
                 callDatePicker()
 
-            btnTimePicker -> {
+            btnTimePicker ->
                 // вызываем диалог с выбором времени
                 callTimePicker()
         }
@@ -159,11 +160,18 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
     override fun onPause() {
         super.onPause()
         saveState()
+        mDbAdapter.write()
     }
 
     override fun onResume() {
         super.onResume()
         populateFields()
+        mDbAdapter.write()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mDbAdapter.write()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

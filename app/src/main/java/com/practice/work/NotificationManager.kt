@@ -12,8 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.os.PowerManager
-import android.text.format.Time
+import com.practice.work.activities.MainActivity
+import com.practice.work.activities.TimeTableActivity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,9 +57,9 @@ object NotificationManager {
         override fun onHandleIntent(intent: Intent?) {
             val now = SimpleDateFormat("HH").format(Calendar.getInstance().time)
             Log.i("NOTIFY", now)
-            if (TimeTableActivity.tasks[now] != null)
-                Log.i("NOTIFY", TimeTableActivity.tasks[now])
-            if (TimeTableActivity.tasks[now] == null)
+//            if (TimeTableActivity.tasks[now] != null)
+//                Log.i("NOTIFY", TimeTableActivity.tasks[now].key)key
+            if (TimeTableActivity.tasks[now]?.text == "task")
                 makeNotification(this, DEADLINE_NOTIFICATION_CHANNEL_ID, "Хотите сделать что-нибудь полезное?", "Кажется, сейчас свободное время")
             Log.i("NOTIFY", "It's work!!!")
         }

@@ -6,6 +6,8 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.practice.work.model.ToDoItem
+import com.practice.work.model.ToDoList
 import java.lang.Exception
 import java.util.*
 
@@ -36,11 +38,11 @@ class DBAdapter(private var mCtx: Context) {
         mDbHelper.close()
     }
 
-    fun createTask(task: String, description: String, time: Long): Long {
+    fun createTask(task: String, description: String, time: Long, id: Long): Long {
         val initialValues = ContentValues()
         initialValues.put(KEY_TASK, task)
         initialValues.put(KEY_DESCRIPTION, description)
-        //  initialValues.put(KEY_DATE, date)
+        initialValues.put(KEY_ROW_ID, id)
         initialValues.put(KEY_TIME, time)
         return mDb.insert(DATABASE_TABLE, null, initialValues)
     }
@@ -76,7 +78,7 @@ class DBAdapter(private var mCtx: Context) {
         return c
     }
 
-    private fun mapToTask(c: Cursor): ToDoItem{
+    private fun mapToTask(c: Cursor): ToDoItem {
         try {
             val name = c.getString(
                 c.getColumnIndex(KEY_TASK)

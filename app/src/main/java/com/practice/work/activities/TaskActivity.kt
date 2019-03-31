@@ -1,4 +1,4 @@
-package com.practice.work
+package com.practice.work.activities
 
 
 import android.content.Intent
@@ -10,7 +10,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
 import android.support.v7.widget.LinearLayoutManager
-
+import com.practice.work.DBAdapter
+import com.practice.work.NewTaskActivity
+import com.practice.work.R
+import com.practice.work.model.ToDoItem
+import com.practice.work.model.ToDoList
+import android.support.v7.widget.helper.ItemTouchHelper.*
 class TaskActivity : AppCompatActivity() {
     companion object {
         private const val ADD_TASK_REQUEST = 0
@@ -84,7 +89,7 @@ class TaskActivity : AppCompatActivity() {
                     mDbAdapter.deleteTask(id)
                     updateUI()
                 }.create().show()
-
+//
         }
 
         private var titleItemTextView: TextView = itemView.findViewById(R.id.item_text_view)
@@ -102,6 +107,8 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
+
+
     private inner class ItemAdapter(val items: List<ToDoItem>) : RecyclerView.Adapter<ItemHolder>() {
         override fun getItemCount(): Int {
             return items.size
@@ -115,4 +122,26 @@ class TaskActivity : AppCompatActivity() {
             return ItemHolder(LayoutInflater.from(this@TaskActivity), parent)
         }
     }
+
+//    private inner class SwipeController: Callback() {
+//        override fun getMovementFlags(p0: RecyclerView, p1: RecyclerView.ViewHolder): Int {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        }
+
+//        override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+//            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//        }
+
+//        override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+//            AlertDialog.Builder(this@TaskActivity)
+//                .setTitle("Удаление")
+//                .setMessage("Вы действительно хотите удалить эту задачу?")
+//                .setNegativeButton(android.R.string.no, null)
+//                .setPositiveButton(android.R.string.yes) { _, _ ->
+//                    ToDoList.delete(id)
+//                    mDbAdapter.deleteTask(id)
+//                    updateUI()
+//                }.create().show()
+//        }
+  //  }
 }

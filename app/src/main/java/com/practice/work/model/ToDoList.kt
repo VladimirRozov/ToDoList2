@@ -1,4 +1,6 @@
-package com.practice.work
+package com.practice.work.model
+
+import com.practice.work.DBAdapter
 
 /**
  * список задач
@@ -23,7 +25,7 @@ private fun getItemById(id: Long): ToDoItem? {
         data.sort()
     }
 
-    fun add(i:ToDoItem){
+    fun add(i: ToDoItem){
         if(!data.contains(i)) {
             data.add(i)
         }
@@ -31,7 +33,7 @@ private fun getItemById(id: Long): ToDoItem? {
 
     // return id
     fun newItem(name: String, desc: String, id: Long, time: Long): Long{
-        val i = ToDoItem(name,time,id)
+        val i = ToDoItem(name, time, id)
         i.description = desc
         add(i)
         return id
@@ -40,7 +42,7 @@ private fun getItemById(id: Long): ToDoItem? {
     fun commitToDB(db: DBAdapter){
         try {
             data.forEach {
-                db.createTask(it.name, it.description, it.millisec)
+                db.createTask(it.name, it.description, it.millisec, it.id)
             }
         }catch (e:Exception){}
     }

@@ -1,4 +1,4 @@
-package com.practice.work
+package com.practice.work.activities
 
 import android.annotation.SuppressLint
 import android.app.ListActivity
@@ -10,6 +10,9 @@ import android.view.View
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.ListView
 import android.widget.SimpleCursorAdapter
+import com.practice.work.DBAdapter
+import com.practice.work.NewTaskActivity
+import com.practice.work.R
 
 /**
  *  класс, отвечающий за обновления заданий (новых пунктов)
@@ -46,7 +49,10 @@ class ToDoActivity : ListActivity() {
     private fun fillData() {
         val c = this.mDbAdapter.fetchAllTasks()
         startManagingCursor(c)
-        val from = arrayOf(DBAdapter.KEY_TASK, DBAdapter.KEY_DESCRIPTION)
+        val from = arrayOf(
+            DBAdapter.KEY_TASK,
+            DBAdapter.KEY_DESCRIPTION
+        )
         val to = intArrayOf(R.id.item_text_view)
         val adapter = SimpleCursorAdapter(this, R.layout.to_do_row, c, from, to)
         listAdapter = adapter

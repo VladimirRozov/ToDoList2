@@ -1,7 +1,5 @@
-package com.practice.work
+package com.practice.work.model
 
-import android.annotation.SuppressLint
-import android.util.Log
 import java.util.*
 import java.text.SimpleDateFormat
 
