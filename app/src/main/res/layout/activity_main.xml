@@ -10,31 +10,31 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="728dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            tools:layout_editor_absoluteY="99dp"
+            tools:layout_editor_absoluteY="0dp"
             tools:layout_editor_absoluteX="0dp">
         <TextView
                 android:id="@+id/textHi"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Добро пожаловать"
+                android:layout_height="47dp"
+                android:text="Инструкция"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 
         <TextView
                 android:id="@+id/textTable"
-                android:layout_width="wrap_content"
+                android:layout_width="316dp"
                 android:layout_height="wrap_content"
-                android:text="Для установки распиания перейдите во вкладку Расписание"
+                android:text="Для установки распиания перейдите во вкладку Расписание и сохраните его, нажав на кнопку с часами"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <TextView
                 android:id="@+id/textTask"
-                android:layout_width="wrap_content"
+                android:layout_width="322dp"
                 android:layout_height="wrap_content"
-                android:text="Для установки важных задач перейдите во вкладку Задачи"
+                android:text="Для установки важных задач перейдите во вкладку Задачи и нажмите на кнопку со знаком +"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     </LinearLayout>

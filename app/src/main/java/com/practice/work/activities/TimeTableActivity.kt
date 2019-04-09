@@ -8,6 +8,7 @@ import java.util.*
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.util.Log
 import com.practice.work.R
 import com.practice.work.model.Task
 
@@ -32,10 +33,13 @@ class TimeTableActivity : AppCompatActivity() {
         val cal = Calendar.getInstance()
         val mMonth = cal.get(Calendar.MONTH)+1
         val mDay = cal.get(Calendar.DAY_OF_MONTH)
-        val str = "$mDay.$mMonth"
+        val str = "$mDay.$mMonth"  //case for month
         toolbar.title=str
             setSupportActionBar(toolbar)
 
+        tasks.forEach{ task->
+            loadText(task.value.view, task.value.key)
+        }
 
         initTask()
         tasks["8"]!!.view=findViewById(R.id.task8)
@@ -54,10 +58,8 @@ class TimeTableActivity : AppCompatActivity() {
         tasks["21"]!!.view=findViewById(R.id.task21)
         tasks["22"]!!.view=findViewById(R.id.task22)
 
-        tasks.forEach{ task->
-            task.value.text = loadText(task.value.view, task.value.key)!!
-        }
-//это тсроковые переменные, в которых хранятся таски для расписания по времени
+            // updateTaskText()
+//это строковые переменные, в которых хранятся таски для расписания по времени
 
 
         fab.setOnClickListener {
@@ -69,6 +71,13 @@ class TimeTableActivity : AppCompatActivity() {
         }
     }
 
+private fun updateTaskText(){
+    tasks.forEach{ task->
+        saveText(task.value.view, task.value.key)
+       // task.value.text = loadText(task.value.view, task.value.key)!!
+    }
+    Log.i("NOTIFY", "Tasks text updated")
+}
 
 private fun saveText(etText:EditText, task:String) {
     val sPref: SharedPreferences = getSharedPreferences(myPrefs , Context.MODE_PRIVATE)
@@ -82,6 +91,7 @@ private fun saveText(etText:EditText, task:String) {
     val ed = sPref.edit()
     ed.putString(task, tasker)
     ed.apply()
+    Log.i("SAVE", "Tasks text save")
 
 }
 
@@ -89,17 +99,14 @@ private fun saveText(etText:EditText, task:String) {
         val sPref: SharedPreferences = getSharedPreferences(myPrefs,Context.MODE_PRIVATE)
         val saveText = sPref.getString(task,"")
 
-        if (saveText != "") {
             etText.setText(saveText)
-        }
+        Log.i("LOAD", "Tasks text load")
         return saveText
 
     }
     override fun onDestroy() {
         super.onDestroy()
-        tasks.forEach{ task->
-            task.value.text = loadText(task.value.view, task.value.key)!!
-        }
+        updateTaskText()
     }
 
 }

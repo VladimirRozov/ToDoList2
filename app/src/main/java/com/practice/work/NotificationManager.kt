@@ -48,7 +48,7 @@ object NotificationManager {
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
             AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+            5000,
             pendingIntent)
     }
 
@@ -57,11 +57,19 @@ object NotificationManager {
         override fun onHandleIntent(intent: Intent?) {
             val now = SimpleDateFormat("HH").format(Calendar.getInstance().time)
             Log.i("NOTIFY", now)
+
 //            if (TimeTableActivity.tasks[now] != null)
 //                Log.i("NOTIFY", TimeTableActivity.tasks[now].key)key
-            if (TimeTableActivity.tasks[now]?.text == "task")
-                makeNotification(this, DEADLINE_NOTIFICATION_CHANNEL_ID, "Хотите сделать что-нибудь полезное?", "Кажется, сейчас свободное время")
-            Log.i("NOTIFY", "It's work!!!")
+            if (TimeTableActivity.tasks[now]?.text.isNullOrEmpty()) {
+                makeNotification(
+                    this,
+                    DEADLINE_NOTIFICATION_CHANNEL_ID,
+                    "Хотите сделать что-нибудь полезное?",
+                    "Кажется, сейчас свободное время"
+                )
+                Log.i("NOTIFY",TimeTableActivity.tasks[now]?.text.isNullOrEmpty().toString())
+                Log.i("NOTIFY","Notify")
+            }
         }
     }
 
