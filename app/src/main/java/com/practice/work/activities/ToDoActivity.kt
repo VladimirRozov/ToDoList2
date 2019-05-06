@@ -10,8 +10,7 @@ import android.view.View
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.ListView
 import android.widget.SimpleCursorAdapter
-import com.practice.work.DBAdapter
-import com.practice.work.NewTaskActivity
+import com.practice.work.DB.DBAdapter
 import com.practice.work.R
 
 /**

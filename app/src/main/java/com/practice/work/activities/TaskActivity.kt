@@ -3,6 +3,7 @@ package com.practice.work.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -10,12 +11,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
 import android.support.v7.widget.LinearLayoutManager
-import com.practice.work.DBAdapter
-import com.practice.work.NewTaskActivity
+import com.practice.work.DB.DBAdapter
 import com.practice.work.R
 import com.practice.work.model.ToDoItem
 import com.practice.work.model.ToDoList
-import android.support.v7.widget.helper.ItemTouchHelper.*
+import kotlinx.android.synthetic.main.activity_task.*
+import kotlinx.android.synthetic.main.activity_time_table.*
+
 class TaskActivity : AppCompatActivity() {
     companion object {
         private const val ADD_TASK_REQUEST = 0
@@ -26,13 +28,29 @@ class TaskActivity : AppCompatActivity() {
     private var adapter: ItemAdapter? = null
     private var recyclerView: RecyclerView? = null
     private var isStopApp = true
-
+    private val m2OnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_home -> {
+                val intent = Intent(this,MainActivity::class.java)
+                startActivityForResult(intent, 0)
+            }
+            R.id.navigation_dashboard -> {
+                val intent = Intent(this, TimeTableActivity::class.java)
+                startActivityForResult(intent, 0)
+            }
+            R.id.navigation_notifications -> {
+                val intent = Intent(this, TaskActivity::class.java)
+                startActivityForResult(intent, 0)
+            }
+        }
+        true
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         isStopApp = true
-        setContentView(R.layout.activity_task)
-
+        setContentView(R.layout.activity_task) //why?
+        navigation2.setOnNavigationItemSelectedListener(m2OnNavigationItemSelectedListener)
         //DB connection
         mDbAdapter = DBAdapter(this)
 
@@ -89,8 +107,9 @@ class TaskActivity : AppCompatActivity() {
                     mDbAdapter.deleteTask(id)
                     updateUI()
                 }.create().show()
-//
         }
+
+        //swap()
 
         private var titleItemTextView: TextView = itemView.findViewById(R.id.item_text_view)
         private var descriptionItemTextView: TextView = itemView.findViewById(R.id.description_text_view)
@@ -143,5 +162,6 @@ class TaskActivity : AppCompatActivity() {
 //                    updateUI()
 //                }.create().show()
 //        }
-  //  }
+    //  }
+
 }

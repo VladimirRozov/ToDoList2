@@ -1,6 +1,6 @@
 package com.practice.work.model
 
-import com.practice.work.DBAdapter
+import com.practice.work.DB.DBAdapter
 
 /**
  * список задач

@@ -10,11 +10,11 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="728dp"
+            android:layout_height="625dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp">
+            tools:layout_editor_absoluteX="16dp">
         <TextView
                 android:id="@+id/textHi"
                 android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         <TextView
                 android:id="@+id/textTable"
                 android:layout_width="316dp"
-                android:layout_height="wrap_content"
+                android:layout_height="142dp"
                 android:text="Для установки распиания перейдите во вкладку Расписание и сохраните его, нажав на кнопку с часами"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -42,13 +42,13 @@
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
+            android:layout_height="56dp"
             android:background="?android:attr/windowBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:itemIconTint="@color/blue"
+            app:itemTextColor="@color/blue"
             app:menu="@menu/navigation"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -13,8 +13,8 @@ class MainActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-               // message.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
+                val intent = Intent(this,MainActivity::class.java)
+                startActivityForResult(intent, 0)
             }
             R.id.navigation_dashboard -> {
                 val intent = Intent(this, TimeTableActivity::class.java)
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
                 startActivityForResult(intent, 0)
             }
         }
-        false
+        true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         NotificationManager.createNotificationChannel(
-            this,
-            "sugg",
-            "",
-            NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID
-        )
-        //NotificationManager.createNotificationChannel()
+                this,
+        "sugg",
+        "",
+        NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID
+        ) //may be zakommentirovat'
+        NotificationManager.createNotificationChannel(this, "sugg","", NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
         NotificationManager.setNotification(this)
     }
 

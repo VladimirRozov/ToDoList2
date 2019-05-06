@@ -11,6 +11,7 @@
         <activity
                 android:name=".activities.TimeTableActivity"
                 android:label="@string/title_activity_time_table"
+                android:windowSoftInputMode="stateHidden"
                 android:theme="@style/NoActionBar">
         </activity>
         <activity
@@ -20,7 +21,7 @@
         <activity
                 android:name=".activities.MainActivity"
                 android:label="@string/app_name"
-                android:theme="@style/Theme.Design.NoActionBar">
+                android:theme="@style/Theme.AppCompat.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".NewTaskActivity"
+                android:name=".activities.NewTaskActivity"
                 android:label="@string/app_name"/>
         <receiver android:name=".NotificationManager$AlarmReceiver"/>
         <service android:name=".NotificationManager$NotifyService"/>

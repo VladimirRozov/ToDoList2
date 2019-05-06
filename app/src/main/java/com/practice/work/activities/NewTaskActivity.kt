@@ -1,4 +1,4 @@
-package com.practice.work
+package com.practice.work.activities
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -12,7 +12,9 @@ import android.support.v7.app.AlertDialog
 import java.util.*
 import android.content.Intent
 import android.util.Log
-import com.practice.work.activities.MainActivity
+import com.practice.work.CustomTextWatcher
+import com.practice.work.DB.DBAdapter
+import com.practice.work.R
 import com.practice.work.model.ToDoList
 
 /**
@@ -171,7 +173,8 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onStop() {
         super.onStop()
-        mDbAdapter.write()
+        onBackPressed()
+            //  mDbAdapter.write()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -201,7 +204,7 @@ internal class NewTaskActivity : AppCompatActivity(), View.OnClickListener {
         .setPositiveButton(android.R.string.yes) { _, _ ->
             ToDoList.delete(id)
             mDbAdapter.deleteTask(id)
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, TaskActivity::class.java)
             startActivity(intent)
             finish()
         }.create().show()

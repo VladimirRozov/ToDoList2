@@ -46,9 +46,8 @@ object NotificationManager {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-            5000,
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,900000,
+            900000,
             pendingIntent)
     }
 
@@ -60,14 +59,14 @@ object NotificationManager {
 
 //            if (TimeTableActivity.tasks[now] != null)
 //                Log.i("NOTIFY", TimeTableActivity.tasks[now].key)key
-            if (TimeTableActivity.tasks[now]?.text.isNullOrEmpty()) {
+            if (TimeTableActivity.tasks["tasks$now"]?.text.isNullOrEmpty()) {
                 makeNotification(
                     this,
                     DEADLINE_NOTIFICATION_CHANNEL_ID,
                     "Хотите сделать что-нибудь полезное?",
                     "Кажется, сейчас свободное время"
                 )
-                Log.i("NOTIFY",TimeTableActivity.tasks[now]?.text.isNullOrEmpty().toString())
+                Log.i("NOTIFY",TimeTableActivity.tasks["tasks$now"]?.text.isNullOrEmpty().toString())
                 Log.i("NOTIFY","Notify")
             }
         }
@@ -75,8 +74,8 @@ object NotificationManager {
 
     class AlarmReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val intent1 = Intent(context, NotifyService::class.java)
-            context.startService(intent1)
+            val intent = Intent(context, NotifyService::class.java)
+            context.startService(intent) //здесь ругается
         }
     }
 

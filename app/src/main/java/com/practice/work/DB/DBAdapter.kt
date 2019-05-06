@@ -1,4 +1,4 @@
-package com.practice.work
+package com.practice.work.DB
 
 import android.content.ContentValues
 import android.content.Context
@@ -40,10 +40,12 @@ class DBAdapter(private var mCtx: Context) {
 
     fun createTask(task: String, description: String, time: Long, id: Long): Long {
         val initialValues = ContentValues()
-        initialValues.put(KEY_TASK, task)
-        initialValues.put(KEY_DESCRIPTION, description)
-        initialValues.put(KEY_ROW_ID, id)
-        initialValues.put(KEY_TIME, time)
+        if(task!=null||task!=""||description!=null||id!=null||time!=null) {
+            initialValues.put(KEY_TASK, task)
+            initialValues.put(KEY_DESCRIPTION, description)
+            initialValues.put(KEY_ROW_ID, id)
+            initialValues.put(KEY_TIME, time)
+        }
         return mDb.insert(DATABASE_TABLE, null, initialValues)
     }
 
@@ -61,13 +63,24 @@ class DBAdapter(private var mCtx: Context) {
     }
 
     fun fetchAllTasks(): Cursor {
-        return mDb.query(DATABASE_TABLE, arrayOf(KEY_ROW_ID, KEY_TASK, KEY_DESCRIPTION,  KEY_TIME), null, null, null, null, null)
+        return mDb.query(
+            DATABASE_TABLE, arrayOf(
+                KEY_ROW_ID,
+                KEY_TASK,
+                KEY_DESCRIPTION,
+                KEY_TIME
+            ), null, null, null, null, null)
     }
 
     fun fetchTask(id: Long): Cursor? {
         val c = mDb.query(
             DATABASE_TABLE,
-            arrayOf(KEY_ROW_ID, KEY_TASK, KEY_DESCRIPTION,  KEY_TIME),
+            arrayOf(
+                KEY_ROW_ID,
+                KEY_TASK,
+                KEY_DESCRIPTION,
+                KEY_TIME
+            ),
             "$KEY_ROW_ID = $id",
             null,
             null,
