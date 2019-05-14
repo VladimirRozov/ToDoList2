@@ -1,4 +1,4 @@
-package com.practice.work
+package com.practice.work.model
 
 import android.text.TextWatcher
 import android.widget.Button

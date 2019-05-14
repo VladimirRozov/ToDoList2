@@ -15,12 +15,6 @@
             android:orientation="vertical"
             tools:layout_editor_absoluteY="0dp"
             tools:layout_editor_absoluteX="16dp" tools:ignore="MissingConstraints">
-        <TextView
-                android:id="@+id/textHi"
-                android:layout_width="wrap_content"
-                android:layout_height="47dp"
-                android:text="Инструкция"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
 
         <TextView

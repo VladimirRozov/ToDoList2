@@ -17,17 +17,17 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/to_do_list_container"
             android:layout_width="398dp"
-            android:layout_height="533dp"
+            android:layout_height="536dp"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="16dp" tools:layout_editor_absoluteX="6dp"/>
+            tools:layout_editor_absoluteY="13dp" tools:layout_editor_absoluteX="6dp"/>
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_width="62dp"
-            android:layout_height="122dp"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
             app:srcCompat="@android:drawable/ic_menu_add"
-            tools:ignore="MissingConstraints" android:layout_marginEnd="24dp" android:layout_marginRight="24dp"
+            tools:ignore="MissingConstraints" android:layout_marginEnd="28dp" android:layout_marginRight="28dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="68dp"/>
+            android:layout_marginBottom="72dp" app:fabSize="auto"/>
     <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation2"
             android:layout_width="wrap_content"

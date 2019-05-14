@@ -34,13 +34,15 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        NotificationManager.createNotificationChannel(
-                this,
+        NotificationManager.createNotificationChannel(this,
         "sugg",
         "",
-        NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID
-        ) //may be zakommentirovat'
-        NotificationManager.createNotificationChannel(this, "sugg","", NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
+        NotificationManager.SUGGESTION_NOTIFICATION_CHANNEL_ID)
+
+        NotificationManager.createNotificationChannel(this,
+            "ded",
+            "",
+            NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
         NotificationManager.setNotification(this)
     }
 

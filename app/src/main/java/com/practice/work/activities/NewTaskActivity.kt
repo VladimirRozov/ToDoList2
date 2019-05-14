@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog
 import java.util.*
 import android.content.Intent
 import android.util.Log
-import com.practice.work.CustomTextWatcher
+import com.practice.work.model.CustomTextWatcher
 import com.practice.work.DB.DBAdapter
 import com.practice.work.R
 import com.practice.work.model.ToDoList
