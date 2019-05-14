@@ -129,7 +129,7 @@ private fun updateTaskText(){
         val saveText = sPref.getString(task,"")
 
             etText.setText(saveText)
-        Log.i("LOAD", "Tasks text load")
+        Log.i("LOAD", "Tasks text load saveText")
         return saveText
     }
 

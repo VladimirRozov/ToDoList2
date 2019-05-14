@@ -46,5 +46,34 @@ class MainActivity : AppCompatActivity() {
         NotificationManager.setNotification(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        NotificationManager.createNotificationChannel(this,
+            "sugg",
+            "",
+            NotificationManager.SUGGESTION_NOTIFICATION_CHANNEL_ID)
+
+        NotificationManager.createNotificationChannel(this,
+            "ded",
+            "",
+            NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
+        NotificationManager.setNotification(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        NotificationManager.createNotificationChannel(this,
+            "sugg",
+            "",
+            NotificationManager.SUGGESTION_NOTIFICATION_CHANNEL_ID)
+
+        NotificationManager.createNotificationChannel(this,
+            "ded",
+            "",
+            NotificationManager.DEADLINE_NOTIFICATION_CHANNEL_ID)
+        NotificationManager.setNotification(this)
+    }
 
 }

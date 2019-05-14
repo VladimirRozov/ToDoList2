@@ -12,10 +12,15 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.SharedPreferences
 import com.practice.work.activities.MainActivity
 import com.practice.work.activities.TimeTableActivity
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.ActivityManager
+import android.support.v4.content.ContextCompat
+
+
 
 //import java.util.*
 
@@ -46,7 +51,7 @@ object NotificationManager {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,450000,
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,300000,
             900000,
             pendingIntent)
     }
@@ -55,18 +60,20 @@ object NotificationManager {
     class NotifyService : IntentService("NotificationManager") {
         override fun onHandleIntent(intent: Intent?) {
             val now = SimpleDateFormat("HH").format(Calendar.getInstance().time)
-            Log.i("NOTIFY", now)
+            Log.i("NOTIFY", "time now $now")
 
 //            if (TimeTableActivity.tasks[now] != null)
 //                Log.i("NOTIFY", TimeTableActivity.tasks[now].key)key
-            if (TimeTableActivity.tasks["tasks$now"]?.text == null || TimeTableActivity.tasks["tasks$now"]!!.text == "") {
+            val sPref: SharedPreferences = getSharedPreferences("myTimeTable",Context.MODE_PRIVATE)
+            val saveText = sPref.getString("task$now","")
+            if (saveText.isNullOrEmpty()){
                 makeNotification(
                     this,
                     DEADLINE_NOTIFICATION_CHANNEL_ID,
                     "Хотите сделать что-нибудь полезное?",
                     "Кажется, сейчас свободное время"
                 )
-                Log.i("NOTIFY",TimeTableActivity.tasks["tasks$now"]?.text.isNullOrEmpty().toString())
+                Log.i("NOTIFY","Is it free:: $saveText}")
                 Log.i("NOTIFY","Notify")
             }
         }
@@ -74,8 +81,13 @@ object NotificationManager {
 
     class AlarmReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val intent = Intent(context, NotifyService::class.java)
-            context.startService(intent)
+            try {
+//                val activityManager = ContextCompat.getSystemService(context, ActivityManager::class.java)
+//                activityManager!!.runningAppProcesses[0].importance
+                val intent = Intent(context, NotifyService::class.java)
+                context.startService(intent)
+            }catch (e: java.lang.IllegalStateException){Log.i("NOTIFY","ex")}
+
         }
     }
 
